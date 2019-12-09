@@ -23,7 +23,7 @@ const UserDetails: React.FC<{ user: IUser }> = ({ user }) => {
     const classes = useStyles();
 
     return (
-        <Paper style={{ marginTop: "70px" }}>
+        <Paper>
             <Grid container spacing={1} justify="space-between">
                 <Grid item>
 

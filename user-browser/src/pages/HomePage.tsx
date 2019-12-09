@@ -16,13 +16,13 @@ const useStyles = makeStyles((theme: Theme) =>
             marginTop: theme.spacing(1)
         },
         listContainer: {
-            padding: 0, 
+            padding: 0,
             [theme.breakpoints.down('xs')]: {
                 maxHeight: "50vh",
-              },
+            },
             [theme.breakpoints.up('sm')]: {
                 maxHeight: "75vh",
-              },
+            },
             overflowY: "auto",
             overflowX: "hidden"
         },
@@ -131,31 +131,20 @@ const HomePage: React.FC<{ width: string }> = ({ width }) => {
     }, [])
 
     let usersList = users.length === 0 ? null : createUsersList(users);
-    let selectedUserDetails = isEmpty(selectedUser) ? null : <UserDetails user={selectedUser as IUser}/>;
+    let selectedUserDetails = isEmpty(selectedUser) ? null : <UserDetails user={selectedUser as IUser} />;
 
     return (
         <CssBaseline>
             <Container className={classes.container} maxWidth={width === "xs" ? false : "lg"}>
-                <Grid container spacing={2} direction={width ==="xs" ? "column" : "row"}>
+                <Grid container spacing={2} direction={width === "xs" ? "column" : "row"}>
 
                     <Grid item md={3} sm={4}>
-                        <Grid container direction="column" spacing={width === "xs" ? 0 : 1} >
-                            <Grid item>
-                                <Paper>
-                                    <Typography variant="h5">
-                                        User Browser
-                                    </Typography>
-                                </Paper>
-                            </Grid>
-                            <Grid item>
-                                <Paper className={classes.listContainer}>
-                                    {usersList}
-                                </Paper>
-                            </Grid>
-                        </Grid>
+                        <Paper className={classes.listContainer}>
+                            {usersList}
+                        </Paper>
                     </Grid>
 
-                    <Grid xs item style={selectedUserDetails === null ? {display: "flex", justifyContent: "center", alignItems: "center", marginTop: "70px"} : {}}>
+                    <Grid xs item style={selectedUserDetails === null ? { display: "flex", justifyContent: "center", alignItems: "center" } : {}}>
                         {selectedUserDetails !== null ? selectedUserDetails : (
                             <Typography variant="caption" >
                                 Select a user to view detailed information
