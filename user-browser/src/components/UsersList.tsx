@@ -1,27 +1,9 @@
 import React, { useState } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Grid, Paper, Typography, List, ListItem, ListItemAvatar, ListItemText, Avatar } from '@material-ui/core';
+import { List, ListItem, ListItemAvatar, ListItemText, Avatar } from '@material-ui/core';
 import { IUser } from '.././pages/HomePage';
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        listContainer: {
-            padding: 0,
-            [theme.breakpoints.down('xs')]: {
-                maxHeight: "50vh",
-            },
-            [theme.breakpoints.up('sm')]: {
-                maxHeight: "75vh",
-            },
-            overflowY: "auto",
-            overflowX: "hidden"
-        },
-
-    }),
-);
-
 const UsersList: React.FC<{ users: Array<IUser>, onChange: (value: IUser) => any }> = ({ users, onChange }) => {
-    const classes = useStyles();
     const [selectedUser, setSelectedUser] = useState({});
 
     let items = users.map((user) => {
@@ -47,11 +29,9 @@ const UsersList: React.FC<{ users: Array<IUser>, onChange: (value: IUser) => any
     })
 
     return (
-        <Paper className={classes.listContainer}>
-            <List style={{ padding: 0 }}>
-                {items}
-            </List>
-        </Paper>
+        <List style={{ padding: 0 }}>
+            {items}
+        </List>
     );
 }
 

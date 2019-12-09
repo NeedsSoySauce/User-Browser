@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { CssBaseline, Container, Grid, Typography, withWidth, CircularProgress } from '@material-ui/core';
+import { CssBaseline, Container, Grid, Paper, Typography, withWidth, CircularProgress } from '@material-ui/core';
 import UserDetails from ".././components/UserDetails";
 import UsersList from ".././components/UsersList";
 
@@ -111,7 +111,7 @@ const HomePage: React.FC<{ width: string }> = ({ width }) => {
     let content = null
     if (users.length === 0) {
         content = (
-            <Grid container justify="center" alignItems="center" direction="column" spacing={2} style={{height: "50vh"}}>
+            <Grid container justify="center" alignItems="center" direction="column" spacing={2} style={{ height: "50vh" }}>
                 <Grid item>
                     <CircularProgress />
                 </Grid>
@@ -122,12 +122,14 @@ const HomePage: React.FC<{ width: string }> = ({ width }) => {
                 </Grid>
             </Grid>
         )
-    } else {    
+    } else {
         let selectedUserDetails = isEmpty(selectedUser) ? null : <UserDetails user={selectedUser as IUser} />;
         content = (
             <Grid container spacing={2} direction={width === "xs" ? "column" : "row"}>
                 <Grid item md={3} sm={4}>
-                    <UsersList users={users} onChange={setSelectedUser}/>
+                    <Paper className={classes.listContainer}>
+                        <UsersList users={users} onChange={setSelectedUser} />
+                    </Paper>
                 </Grid>
 
                 <Grid xs item style={selectedUserDetails === null ? { display: "flex", justifyContent: "center", alignItems: "center" } : {}}>
