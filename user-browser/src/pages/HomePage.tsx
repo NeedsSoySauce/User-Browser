@@ -98,9 +98,12 @@ const HomePage: React.FC<{ width: string }> = ({ width }) => {
                     onClick={e => setSelectedUser(user)}
                 >
                     <ListItemAvatar>
-                        <Avatar src={user.picture.thumbnail}></Avatar>
+                        <Avatar alt={`${user.name.title} ${user.name.first} ${user.name.last}`} src={user.picture.thumbnail}></Avatar>
                     </ListItemAvatar>
-                    <ListItemText primary={`${user.name.first} ${user.name.last}`} />
+                    <ListItemText
+                        primary={`${user.name.first} ${user.name.last}`}
+                        secondary={`${user.dob.age}, ${user.gender === "male" ? "Male" : "Female"}, ${user.nat}`}
+                    />
                 </ListItem>
             )
         })
