@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import { HomePage } from './pages/HomePage';
-import { NoMatchPage } from './pages/NoMatchPage';
+import HomePage from './pages/HomePage';
+import NoMatchPage from './pages/NoMatchPage';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
