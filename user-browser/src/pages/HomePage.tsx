@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { CssBaseline, Container, Grid, Paper, Typography, List, ListItem, ListItemAvatar, ListItemText, Avatar, withWidth } from '@material-ui/core';
+import { CssBaseline, Container, Grid, Paper, Typography, List, ListItem, ListItemAvatar, ListItemText, Avatar, withWidth, CircularProgress } from '@material-ui/core';
 import UserDetails from ".././components/UserDetails";
 
 function isEmpty(obj: object) {
@@ -133,28 +133,46 @@ const HomePage: React.FC<{ width: string }> = ({ width }) => {
         return () => abortController.abort()
     }, [])
 
-    let usersList = users.length === 0 ? null : createUsersList(users);
     let selectedUserDetails = isEmpty(selectedUser) ? null : <UserDetails user={selectedUser as IUser} />;
+
+    let content = null
+    if (users.length === 0) {
+        content = (
+            <Grid container justify="center" alignItems="center" direction="column" spacing={2} style={{height: "50vh"}}>
+                <Grid item>
+                    <CircularProgress />
+                </Grid>
+                <Grid item>
+                    <Typography variant="caption">
+                        Fetching data...
+                    </Typography>
+                </Grid>
+            </Grid>
+        )
+    } else {
+        content = (
+            <Grid container spacing={2} direction={width === "xs" ? "column" : "row"}>
+                <Grid item md={3} sm={4}>
+                    <Paper className={classes.listContainer}>
+                        {createUsersList(users)}
+                    </Paper>
+                </Grid>
+
+                <Grid xs item style={selectedUserDetails === null ? { display: "flex", justifyContent: "center", alignItems: "center" } : {}}>
+                    {selectedUserDetails !== null ? selectedUserDetails : (
+                        <Typography variant="caption" >
+                            Select a user to view detailed information
+                        </Typography>
+                    )}
+                </Grid>
+            </Grid>
+        )
+    }
 
     return (
         <CssBaseline>
             <Container className={classes.container} maxWidth={width === "xs" ? false : "lg"}>
-                <Grid container spacing={2} direction={width === "xs" ? "column" : "row"}>
-
-                    <Grid item md={3} sm={4}>
-                        <Paper className={classes.listContainer}>
-                            {usersList}
-                        </Paper>
-                    </Grid>
-
-                    <Grid xs item style={selectedUserDetails === null ? { display: "flex", justifyContent: "center", alignItems: "center" } : {}}>
-                        {selectedUserDetails !== null ? selectedUserDetails : (
-                            <Typography variant="caption" >
-                                Select a user to view detailed information
-                            </Typography>
-                        )}
-                    </Grid>
-                </Grid>
+                {content}
             </Container>
         </CssBaseline>
     );
