@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { List, ListItem, ListItemAvatar, ListItemText, Avatar } from '@material-ui/core';
 import { IUser } from '.././pages/HomePage';
 
