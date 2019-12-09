@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { CssBaseline, Container, Grid, Paper, Typography, List, ListItem, ListItemAvatar, ListItemText, Avatar, withWidth, CircularProgress } from '@material-ui/core';
+import { CssBaseline, Container, Grid, Typography, withWidth, CircularProgress } from '@material-ui/core';
 import UserDetails from ".././components/UserDetails";
+import UsersList from ".././components/UsersList";
 
 function isEmpty(obj: object) {
     for (let key in obj) {
@@ -88,32 +89,6 @@ const HomePage: React.FC<{ width: string }> = ({ width }) => {
     const [users, setUsers] = useState([]);
     const [selectedUser, setSelectedUser] = useState({});
 
-    const createUsersList = (users: Array<IUser>) => {
-        let items = users.map((user) => {
-            return (
-                <ListItem
-                    key={user.login.uuid}
-                    button
-                    selected={selectedUser === user}
-                    onClick={e => setSelectedUser(user)}
-                >
-                    <ListItemAvatar>
-                        <Avatar alt={`${user.name.title} ${user.name.first} ${user.name.last}`} src={user.picture.thumbnail}></Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                        primary={`${user.name.first} ${user.name.last}`}
-                        secondary={`${user.dob.age}, ${user.gender === "male" ? "Male" : "Female"}, ${user.nat}`}
-                    />
-                </ListItem>
-            )
-        })
-        return (
-            <List style={{ padding: 0 }}>
-                {items}
-            </List>
-        )
-    }
-
     // Fetch users and trigger a state upstate when complete
     useEffect(() => {
         const abortController = new AbortController()
@@ -133,8 +108,6 @@ const HomePage: React.FC<{ width: string }> = ({ width }) => {
         return () => abortController.abort()
     }, [])
 
-    let selectedUserDetails = isEmpty(selectedUser) ? null : <UserDetails user={selectedUser as IUser} />;
-
     let content = null
     if (users.length === 0) {
         content = (
@@ -149,13 +122,12 @@ const HomePage: React.FC<{ width: string }> = ({ width }) => {
                 </Grid>
             </Grid>
         )
-    } else {
+    } else {    
+        let selectedUserDetails = isEmpty(selectedUser) ? null : <UserDetails user={selectedUser as IUser} />;
         content = (
             <Grid container spacing={2} direction={width === "xs" ? "column" : "row"}>
                 <Grid item md={3} sm={4}>
-                    <Paper className={classes.listContainer}>
-                        {createUsersList(users)}
-                    </Paper>
+                    <UsersList users={users} onChange={setSelectedUser}/>
                 </Grid>
 
                 <Grid xs item style={selectedUserDetails === null ? { display: "flex", justifyContent: "center", alignItems: "center" } : {}}>
