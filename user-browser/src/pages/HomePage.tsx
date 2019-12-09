@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { CssBaseline, Container, Grid, Paper, Typography, List, ListItem, ListItemAvatar, ListItemText, Avatar } from '@material-ui/core';
+import { CssBaseline, Container, Grid, Paper, Typography, List, ListItem, ListItemAvatar, ListItemText, Avatar, withWidth } from '@material-ui/core';
 import UserDetails from ".././components/UserDetails";
 
 function isEmpty(obj: object) {
@@ -15,11 +15,18 @@ const useStyles = makeStyles((theme: Theme) =>
         container: {
             marginTop: theme.spacing(1)
         },
-        paper: {
-            maxHeight: '75vh',
+        listContainer: {
+            padding: 0, 
+            [theme.breakpoints.down('xs')]: {
+                maxHeight: "50vh",
+              },
+            [theme.breakpoints.up('sm')]: {
+                maxHeight: "75vh",
+              },
             overflowY: "auto",
             overflowX: "hidden"
-        }
+        },
+
     }),
 );
 
@@ -76,7 +83,7 @@ export interface IUser {
     };
 }
 
-const HomePage: React.FC = () => {
+const HomePage: React.FC<{ width: string }> = ({ width }) => {
     const classes = useStyles();
     const [users, setUsers] = useState([]);
     const [selectedUser, setSelectedUser] = useState({});
@@ -104,6 +111,7 @@ const HomePage: React.FC = () => {
         )
     }
 
+    // Fetch users and trigger a state upstate when complete
     useEffect(() => {
         const abortController = new AbortController()
 
@@ -127,10 +135,11 @@ const HomePage: React.FC = () => {
 
     return (
         <CssBaseline>
-            <Container maxWidth="xl" className={classes.container}>
-                <Grid container spacing={2}>
-                    <Grid item xs={2}>
-                        <Grid container direction="column" spacing={1}>
+            <Container className={classes.container} maxWidth={width === "xs" ? false : "lg"}>
+                <Grid container spacing={2} direction={width ==="xs" ? "column" : "row"}>
+
+                    <Grid item md={3} sm={4}>
+                        <Grid container direction="column" spacing={width === "xs" ? 0 : 1} >
                             <Grid item>
                                 <Paper>
                                     <Typography variant="h5">
@@ -139,16 +148,17 @@ const HomePage: React.FC = () => {
                                 </Paper>
                             </Grid>
                             <Grid item>
-                                <Paper className={classes.paper} style={{ padding: 0 }}>
+                                <Paper className={classes.listContainer}>
                                     {usersList}
                                 </Paper>
                             </Grid>
                         </Grid>
                     </Grid>
-                    <Grid item xs style={selectedUserDetails === null ? {display: "flex", justifyContent: "center", alignItems: "center"} : {}}>
+
+                    <Grid xs item style={selectedUserDetails === null ? {display: "flex", justifyContent: "center", alignItems: "center", marginTop: "70px"} : {}}>
                         {selectedUserDetails !== null ? selectedUserDetails : (
                             <Typography variant="caption" >
-                                Select a user to view detailed information on them
+                                Select a user to view detailed information
                             </Typography>
                         )}
                     </Grid>
@@ -158,4 +168,4 @@ const HomePage: React.FC = () => {
     );
 }
 
-export default HomePage;
+export default withWidth()(HomePage);
