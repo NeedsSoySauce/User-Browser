@@ -8,7 +8,7 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import SortIcon from '@material-ui/icons/Sort';
 import Searchbar from './components/Searchbar';
 
-const AppContext = React.createContext({
+export const AppContext = React.createContext({
     searchbarValue: ''
 });
 
@@ -36,12 +36,12 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const App: React.FC = () => {
-    const [searchbarValue, setSearchbarValue ] = useState("");
+    const [searchbarValue, setSearchbarValue] = useState("");
     const classes = useStyles();
 
     return (
         <ThemeProvider theme={theme}>
-            <AppContext.Provider value={{searchbarValue: searchbarValue}}>
+            <AppContext.Provider value={{ searchbarValue: searchbarValue }}>
                 <AppBar position="static" style={{ paddingTop: 0, paddingBottom: 0 }}>
                     <Container>
                         <Toolbar variant="dense" classes={{ root: classes.toolbarRoot }}>
