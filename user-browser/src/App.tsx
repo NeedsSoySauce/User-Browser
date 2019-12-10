@@ -3,21 +3,22 @@ import { Switch, Route, Link } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import NoMatchPage from './pages/NoMatchPage';
 import { ThemeProvider, createMuiTheme, makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Typography, Container, Button } from '@material-ui/core';
-import SortIcon from '@material-ui/icons/Sort';
+import { AppBar, Toolbar, Typography, Container } from '@material-ui/core';
 import Searchbar from './components/Searchbar';
 import FilterDialog from './components/FilterDialog';
+import SortDialog from './components/SortDialog';
 
-interface IFilterOptions {
+interface IAppContext {
+    searchbarValue: string,
     filterOptions: {
         gender: string,
         ageRange: number[],
         countries: object[]
+    },
+    sortingOptions: {
+        ordering: string,
+        direction: string
     }
-}
-
-interface IAppContext extends IFilterOptions {
-    searchbarValue: string
 }
 
 export const AppContext = React.createContext<IAppContext>({
@@ -26,7 +27,12 @@ export const AppContext = React.createContext<IAppContext>({
         gender: 'all',
         ageRange: [0, 100],
         countries: []
+    },
+    sortingOptions: {
+        ordering: "First name",
+        direction: "Descending"
     }
+
 });
 
 const theme = createMuiTheme({
@@ -59,11 +65,15 @@ const App: React.FC = () => {
         ageRange: [0, 100],
         countries: []
     });
+    const [sortingOptions, setSortingOptions] = useState({
+        ordering: "First name",
+        direction: "Descending"
+    })
     const classes = useStyles();
 
     return (
         <ThemeProvider theme={theme}>
-            <AppContext.Provider value={{ searchbarValue: searchbarValue, filterOptions: filterOptions }}>
+            <AppContext.Provider value={{ searchbarValue: searchbarValue, filterOptions: filterOptions, sortingOptions: sortingOptions }}>
                 <AppBar position="static" style={{ paddingTop: 0, paddingBottom: 0 }}>
                     <Container>
                         <Toolbar variant="dense" classes={{ root: classes.toolbarRoot }}>
@@ -74,13 +84,8 @@ const App: React.FC = () => {
                             </Typography>
                             <div className={classes.searchInputs}>
                                 <Searchbar onInput={setSearchbarValue} />
-                                <FilterDialog onChange={(value: any) => { setFilterOptions(value) }} />
-                                <Button
-                                    color="inherit"
-                                    startIcon={<SortIcon />}
-                                >
-                                    Sort
-                                </Button>
+                                <FilterDialog onChange={(value: any) => setFilterOptions(value)} />
+                                <SortDialog onChange={(value: any) => setSortingOptions(value)} />
                             </div>
                         </Toolbar>
                     </Container>

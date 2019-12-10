@@ -5,10 +5,30 @@ import { AppContext } from '../App';
 
 const UsersList: React.FC<{ users: Array<IUser>, onChange: (value: IUser) => any }> = ({ users, onChange }) => {
     const [selectedUser, setSelectedUser] = useState({});
-    const { searchbarValue, filterOptions } = useContext(AppContext);
+    const { searchbarValue, filterOptions, sortingOptions } = useContext(AppContext);
 
     let { gender, ageRange, countries } = filterOptions;
     let countryNames: string[] = countries.map((value: any) => value.name.toLowerCase());
+
+    // Sort users based on the selected ordering and direction
+    let predicate = (a: IUser, b: IUser) => a.name.first.localeCompare(b.name.first);
+    switch (sortingOptions.ordering) {
+        case "Last name":
+            predicate = (a, b) => a.name.last.localeCompare(b.name.last);
+            break;
+        case "Age":
+            predicate = (a, b) => Number.parseInt(a.dob.age) - Number.parseInt(b.dob.age);
+            break;
+        case "Country":
+            predicate = (a, b) => a.location.country.localeCompare(b.location.country);
+            break;
+    }
+
+    users.sort((a, b) => predicate(a, b))
+
+    if (sortingOptions.direction === "Ascending") {
+        users.reverse();
+    }
 
     // Filter users by the current searchbar value and filter options and then create a list item for each of them
     let items = users
