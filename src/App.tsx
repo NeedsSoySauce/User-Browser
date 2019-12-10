@@ -91,7 +91,7 @@ const App: React.FC = () => {
                     </Container>
                 </AppBar>
                 <Switch>
-                    <Route exact path="/" component={HomePage} />
+                    <Route path="/" component={HomePage} />
                     <Route component={NoMatchPage} />
                 </Switch>
             </AppContext.Provider>
