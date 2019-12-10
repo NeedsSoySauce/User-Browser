@@ -86,17 +86,17 @@ export interface IUser {
 
 const HomePage: React.FC<{ width: string }> = ({ width }) => {
     const classes = useStyles();
+    const [pageNumber, setPageNumber] = useState(1);
     const [users, setUsers] = useState([]);
     const [selectedUser, setSelectedUser] = useState({});
 
-    // Fetch users and trigger a state upstate when complete
+    // Fetch users and trigger a state update when complete, also triggers when the pageNumber is changed
     useEffect(() => {
         const abortController = new AbortController()
 
-        fetch("https://randomuser.me/api/?results=25", { signal: abortController.signal })
+        fetch(`https://randomuser.me/api/?page=${pageNumber}&results=25&seed=abc123`, { signal: abortController.signal })
             .then(res => res.json())
             .then(data => {
-                console.log(data.results);
                 setUsers(data.results);
             })
             .catch(error => {
@@ -106,7 +106,7 @@ const HomePage: React.FC<{ width: string }> = ({ width }) => {
             })
 
         return () => abortController.abort()
-    }, [])
+    }, [pageNumber])
 
     let content = null
     if (users.length === 0) {
