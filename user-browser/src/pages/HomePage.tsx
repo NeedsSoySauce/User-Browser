@@ -19,10 +19,10 @@ const useStyles = makeStyles((theme: Theme) =>
         listContainer: {
             padding: 0,
             [theme.breakpoints.down('xs')]: {
-                maxHeight: "50vh",
+                height: "50vh",
             },
             [theme.breakpoints.up('sm')]: {
-                maxHeight: "75vh",
+                height: "75vh",
             },
             overflowY: "auto",
             overflowX: "hidden"

@@ -4,12 +4,29 @@ import HomePage from './pages/HomePage';
 import NoMatchPage from './pages/NoMatchPage';
 import { ThemeProvider, createMuiTheme, makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Typography, Container, Button } from '@material-ui/core';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import SortIcon from '@material-ui/icons/Sort';
 import Searchbar from './components/Searchbar';
+import FilterDialog from './components/FilterDialog';
 
-export const AppContext = React.createContext({
-    searchbarValue: ''
+interface IFilterOptions {
+    filterOptions: {
+        gender: string,
+        ageRange: number[],
+        countries: object[]
+    }
+}
+
+interface IAppContext extends IFilterOptions {
+    searchbarValue: string
+}
+
+export const AppContext = React.createContext<IAppContext>({
+    searchbarValue: '',
+    filterOptions: {
+        gender: 'all',
+        ageRange: [0, 100],
+        countries: []
+    }
 });
 
 const theme = createMuiTheme({
@@ -37,11 +54,16 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const App: React.FC = () => {
     const [searchbarValue, setSearchbarValue] = useState("");
+    const [filterOptions, setFilterOptions] = useState({
+        gender: 'all',
+        ageRange: [0, 100],
+        countries: []
+    });
     const classes = useStyles();
 
     return (
         <ThemeProvider theme={theme}>
-            <AppContext.Provider value={{ searchbarValue: searchbarValue }}>
+            <AppContext.Provider value={{ searchbarValue: searchbarValue, filterOptions: filterOptions }}>
                 <AppBar position="static" style={{ paddingTop: 0, paddingBottom: 0 }}>
                     <Container>
                         <Toolbar variant="dense" classes={{ root: classes.toolbarRoot }}>
@@ -52,12 +74,7 @@ const App: React.FC = () => {
                             </Typography>
                             <div className={classes.searchInputs}>
                                 <Searchbar onInput={setSearchbarValue} />
-                                <Button
-                                    color="inherit"
-                                    startIcon={<FilterListIcon />}
-                                >
-                                    Filter
-                                </Button>
+                                <FilterDialog onChange={(value: any) => { setFilterOptions(value) }} />
                                 <Button
                                     color="inherit"
                                     startIcon={<SortIcon />}

@@ -88,7 +88,7 @@ const UserDetails: React.FC<{ user: IUser }> = ({ user }) => {
 
                 </Grid>
                 <Grid item>
-                    <img src={user.picture.large} style={{ borderRadius: "3px" }} />
+                    <img alt={`${user.name.title} ${user.name.first} ${user.name.last}`} src={user.picture.large} style={{ borderRadius: "3px" }} />
                 </Grid>
             </Grid>
 

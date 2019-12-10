@@ -5,15 +5,25 @@ import { AppContext } from '../App';
 
 const UsersList: React.FC<{ users: Array<IUser>, onChange: (value: IUser) => any }> = ({ users, onChange }) => {
     const [selectedUser, setSelectedUser] = useState({});
-    const { searchbarValue } = useContext(AppContext);
+    const { searchbarValue, filterOptions } = useContext(AppContext);
 
-    // Display only users that include the current searchbar value
-    if (searchbarValue !== "") {
-        console.log(searchbarValue)
-    }
+    let { gender, ageRange, countries } = filterOptions;
+    let countryNames: string[] = countries.map((value: any) => value.name.toLowerCase());
 
+    // Filter users by the current searchbar value and filter options and then create a list item for each of them
     let items = users
-        .filter((user) => `${user.name.title} ${user.name.first} ${user.name.last}`.toLowerCase().includes(searchbarValue.toLowerCase()))
+        .filter((user) => {
+            let age = Number.parseInt(user.dob.age);
+
+            // If a user doesn't meet any of the filter requirements return false
+            if (!`${user.name.title} ${user.name.first} ${user.name.last}`.toLowerCase().includes(searchbarValue.toLowerCase()) ||
+                (gender !== "all" && user.gender !== filterOptions.gender) ||
+                age < ageRange[0] || age > ageRange[1] ||
+                (countryNames.length !== 0 && !countryNames.includes(user.location.country.toLowerCase()))) {
+                return false
+            }
+            return true;
+        })
         .map((user) => {
             return (
                 <ListItem
@@ -26,7 +36,7 @@ const UsersList: React.FC<{ users: Array<IUser>, onChange: (value: IUser) => any
                     }}
                 >
                     <ListItemAvatar>
-                        <Avatar alt={`${user.name.title} ${user.name.first} ${user.name.last}`} src={user.picture.thumbnail}></Avatar>
+                        <Avatar alt={`${user.name.title} ${user.name.first} ${user.name.last}`} src={user.picture.thumbnail} />
                     </ListItemAvatar>
                     <ListItemText
                         primary={`${user.name.first} ${user.name.last}`}
