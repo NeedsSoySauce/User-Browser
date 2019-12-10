@@ -3,33 +3,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { CssBaseline, Container, Grid, Paper, Typography, withWidth, CircularProgress } from '@material-ui/core';
 import UserDetails from ".././components/UserDetails";
 import UsersList from ".././components/UsersList";
-
-function isEmpty(obj: object) {
-    for (let key in obj) {
-        return false;
-    }
-    return true;
-}
-
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        container: {
-            marginTop: theme.spacing(1)
-        },
-        listContainer: {
-            padding: 0,
-            [theme.breakpoints.down('xs')]: {
-                height: "50vh",
-            },
-            [theme.breakpoints.up('sm')]: {
-                height: "75vh",
-            },
-            overflowY: "auto",
-            overflowX: "hidden"
-        },
-
-    }),
-);
+import localforage from 'localforage';
 
 export interface IUser {
     cell: string,
@@ -84,10 +58,62 @@ export interface IUser {
     };
 }
 
+async function storeUsers(users: IUser[]) {
+    console.log("storing")
+    // Store each user under a key by their uuid
+    users.forEach(user => {
+        localUserStore.setItem(user.login.uuid, user);
+    })
+}
+
+async function loadUsers(amount: number) {
+    let users: IUser[] = [];
+    await localUserStore.iterate((value: IUser, key: string, iterationNumber: number) => {
+        users.push(value);
+        // Stop iteration once we've got enough users
+        if (iterationNumber > amount) {
+            return null;
+        }
+    })
+    return users;
+}
+
+function isEmpty(obj: object) {
+    for (let key in obj) {
+        return false;
+    }
+    return true;
+}
+
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        container: {
+            marginTop: theme.spacing(1)
+        },
+        listContainer: {
+            padding: 0,
+            [theme.breakpoints.down('xs')]: {
+                height: "50vh",
+            },
+            [theme.breakpoints.up('sm')]: {
+                height: "75vh",
+            },
+            overflowY: "auto",
+            overflowX: "hidden"
+        },
+
+    }),
+);
+
+// Setup indexedDB
+const localUserStore = localforage.createInstance({
+    name: "user-browser-users"
+})
+
 const HomePage: React.FC<{ width: string }> = ({ width }) => {
     const classes = useStyles();
     const [pageNumber, setPageNumber] = useState(1);
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState<IUser[]>([]);
     const [selectedUser, setSelectedUser] = useState({});
 
     // Fetch users and trigger a state update when complete, also triggers when the pageNumber is changed
@@ -98,11 +124,15 @@ const HomePage: React.FC<{ width: string }> = ({ width }) => {
             .then(res => res.json())
             .then(data => {
                 setUsers(data.results);
+                storeUsers(data.results)
             })
-            .catch(error => {
+            .catch((error) => {
                 if (error.code !== 20) { // AbortError "The user aborted a request."
                     console.log('Error', { code: error.code, message: error.message, name: error.name })
                 }
+
+                // Fallback to using local database
+                loadUsers(25).then(setUsers)
             })
 
         return () => abortController.abort()
