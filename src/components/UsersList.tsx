@@ -24,7 +24,7 @@ const UsersList: React.FC<{ users: Array<IUser>, onChange: (value: IUser) => any
             break;
     }
 
-    users.sort((a, b) => predicate(a, b))
+    users.sort(predicate)
 
     if (sortingOptions.direction === "Ascending") {
         users.reverse();
