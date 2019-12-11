@@ -5,12 +5,19 @@ import { IUser } from '.././pages/HomePage';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
+        rowContainer: {
+            paddingLeft: theme.spacing(1),
+            flexWrap: "nowrap",
+            wordBreak: "break-word"
+        },
         labelContainer: {
             minWidth: "120px",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            paddingLeft: theme.spacing(1)
+        },
+        valueContainer: {
+            flexGrow: 1
         },
         divider: {
             marginTop: theme.spacing(1),
@@ -30,11 +37,11 @@ const DetailRow: React.FC<IDetailRow> = ({ label, value, labelVariant, valueVari
     const classes = useStyles();
     return (
         <Grid item>
-            <Grid container>
+            <Grid container className={classes.rowContainer}>
                 <Grid item className={classes.labelContainer}>
                     <Typography variant={labelVariant}>{label}</Typography>
                 </Grid>
-                <Grid item>
+                <Grid item className={classes.valueContainer}>
                     <Typography variant={valueVariant}>{value}</Typography>
                 </Grid>
             </Grid>

@@ -240,7 +240,7 @@ const HomePage: React.FC<{ width: string, drawerControlRef?: React.RefObject<any
                 <Grid container spacing={2} direction={width === "xs" ? "column" : "row"}>
 
                     {width === "xs" ? null :
-                        <Grid item md={3} sm={4}>
+                        <Grid item md={3} sm={5}>
                             <Paper className={classes.listContainer} onScroll={handleScroll}>
                                 <UsersList
                                     users={users}
