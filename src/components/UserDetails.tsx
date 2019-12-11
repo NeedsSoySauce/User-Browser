@@ -1,6 +1,6 @@
+import { Divider, Grid, Paper, Typography, useMediaQuery, withWidth } from '@material-ui/core';
+import { createStyles, makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import React from 'react';
-import { Paper, Typography, Divider, Grid, withWidth, useMediaQuery } from '@material-ui/core';
-import { makeStyles, createStyles, Theme, useTheme } from '@material-ui/core/styles';
 import { IUser } from '.././pages/HomePage';
 
 const useStyles = makeStyles((theme: Theme) =>

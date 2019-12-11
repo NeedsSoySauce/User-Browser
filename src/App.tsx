@@ -1,13 +1,13 @@
+import { AppBar, Container, IconButton, Toolbar, Typography, withWidth } from '@material-ui/core';
+import { createMuiTheme, createStyles, makeStyles, Theme, ThemeProvider } from '@material-ui/core/styles';
+import MenuIcon from '@material-ui/icons/Menu';
 import React, { useState } from 'react';
-import { Switch, Route, Link } from 'react-router-dom';
+import { Link, Route, Switch } from 'react-router-dom';
+import FilterDialog from './components/FilterDialog';
+import Searchbar from './components/Searchbar';
+import SortDialog from './components/SortDialog';
 import HomePage from './pages/HomePage';
 import NoMatchPage from './pages/NoMatchPage';
-import { ThemeProvider, createMuiTheme, makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Typography, Container, withWidth, IconButton } from '@material-ui/core';
-import Searchbar from './components/Searchbar';
-import FilterDialog from './components/FilterDialog';
-import SortDialog from './components/SortDialog';
-import MenuIcon from '@material-ui/icons/Menu';
 
 interface IAppProps {
     width: string

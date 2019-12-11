@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { CssBaseline, Container, Grid, Paper, Typography, withWidth, CircularProgress, Button, SwipeableDrawer } from '@material-ui/core';
-import UserDetails from ".././components/UserDetails";
-import UsersList from ".././components/UsersList";
-import localforage from 'localforage';
+import { Button, CircularProgress, Container, CssBaseline, Grid, Paper, SwipeableDrawer, Typography, withWidth } from '@material-ui/core';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import ErrorIcon from '@material-ui/icons/Error';
 import { debounce } from "debounce";
+import localforage from 'localforage';
+import React, { useEffect, useRef, useState } from 'react';
+import UserDetails from ".././components/UserDetails";
+import UsersList from ".././components/UsersList";
 
 export interface IUser {
     cell: string,

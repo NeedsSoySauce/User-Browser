@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button, IconButton, Dialog, DialogTitle, withWidth } from '@material-ui/core';
+import { Button, Dialog, DialogTitle, IconButton, withWidth } from '@material-ui/core';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import CloseIcon from '@material-ui/icons/Close';
+import React, { useState } from 'react';
 
 interface ICustomDialogProps {
     width: string, 

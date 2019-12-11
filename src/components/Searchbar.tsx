@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { makeStyles, createStyles, Theme, fade } from '@material-ui/core/styles';
 import { InputBase } from '@material-ui/core';
+import { createStyles, fade, makeStyles, Theme } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
+import React, { useState } from 'react';
 
 // Several of these styles are borrowed from https://material-ui.com/components/app-bar/#PrimarySearchAppBar.js
 const useStyles = makeStyles((theme: Theme) =>

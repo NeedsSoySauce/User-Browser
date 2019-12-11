@@ -1,10 +1,10 @@
-import React, { useState, useContext } from 'react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { FormControl, FormLabel, FormControlLabel, RadioGroup, Radio, Slider, TextField } from '@material-ui/core';
+import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Slider, TextField } from '@material-ui/core';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import countryListAllIsoData from '../variousCountryListFormats';
+import React, { useContext, useState } from 'react';
 import { AppContext } from '../App';
+import countryListAllIsoData from '../variousCountryListFormats';
 import CustomDialog from "./CustomDialog";
 
 const useStyles = makeStyles((theme: Theme) =>

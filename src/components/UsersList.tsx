@@ -1,5 +1,5 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
-import { List, ListItem, ListItemAvatar, ListItemText, Avatar } from '@material-ui/core';
+import { Avatar, List, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { IUser } from '.././pages/HomePage';
 import { AppContext } from '../App';
 
