@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button, Dialog, DialogTitle, FormControl, FormLabel, FormControlLabel, RadioGroup, Radio, Slider, TextField } from '@material-ui/core';
+import { Button, IconButton, Dialog, DialogTitle, FormControl, FormLabel, FormControlLabel, RadioGroup, Radio, Slider, TextField, withWidth } from '@material-ui/core';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import countryListAllIsoData from '../variousCountryListFormats';
@@ -8,7 +8,6 @@ import countryListAllIsoData from '../variousCountryListFormats';
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         dialogRoot: {
-            width: "33vw",
             padding: theme.spacing(2, 3)
         },
         dialogTitle: {
@@ -30,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const FilterDialog: React.FC<{ onChange?: (value: object) => any }> = ({ onChange }) => {
+const FilterDialog: React.FC<{ onChange?: (value: object) => any, width: string }> = ({ onChange, width }) => {
     const [open, setOpen] = useState(false);
     const [gender, setGender] = useState('all')
     const [ageRange, setAgeRange] = useState([0, 100])
@@ -57,8 +56,9 @@ const FilterDialog: React.FC<{ onChange?: (value: object) => any }> = ({ onChang
         setCountries([]);
     }
 
-    return (
-        <div>
+    let button;
+    if (width !== "xs") {
+        button = (
             <Button
                 color="inherit"
                 startIcon={<FilterListIcon />}
@@ -66,6 +66,22 @@ const FilterDialog: React.FC<{ onChange?: (value: object) => any }> = ({ onChang
             >
                 Filter
             </Button>
+        )
+    } else {
+        button = (
+            <IconButton
+                size="small"
+                color="inherit"
+                onClick={e => setOpen(true)}
+            >
+                <FilterListIcon />
+            </IconButton>
+        )
+    }
+
+    return (
+        <div>
+            {button}
             <Dialog
                 classes={{
                     paper: classes.dialogRoot
@@ -133,7 +149,7 @@ const FilterDialog: React.FC<{ onChange?: (value: object) => any }> = ({ onChang
 
                 <div className={classes.buttonContainer}>
                     <Button color="primary" variant="outlined" onClick={resetFilterOptions}>Reset</Button>
-                    {/* <Button color="primary" variant="contained" onClick={applyFilterOptions}>Apply</Button> */}
+                    <Button color="primary" variant="contained" onClick={applyFilterOptions}>Apply</Button>
                 </div>
 
             </Dialog>
@@ -142,4 +158,4 @@ const FilterDialog: React.FC<{ onChange?: (value: object) => any }> = ({ onChang
     );
 }
 
-export default FilterDialog;
+export default withWidth()(FilterDialog);
