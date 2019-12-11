@@ -5,7 +5,7 @@ import { AppContext } from '../App';
 
 interface IUsersListProps {
     users: Array<IUser>, 
-    onChange: (value: IUser) => any, 
+    onChange?: (value: IUser) => any, 
     results: number
 }
 
@@ -68,7 +68,9 @@ const UsersList: React.FC<IUsersListProps> = ({ users, onChange, results }) => {
                 selected={selectedUser === user}
                 onClick={e => {
                     setSelectedUser(user);
-                    onChange(user);
+                    if (onChange) {
+                        onChange(user);
+                    }
                 }}
             >
                 <ListItemAvatar>
