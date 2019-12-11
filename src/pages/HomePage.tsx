@@ -116,11 +116,21 @@ const localUserStore = localforage.createInstance({
 
 const HomePage: React.FC<{ width: string }> = ({ width }) => {
     const classes = useStyles();
-    const [pageNumber, setPageNumber] = useState(1);
     const [results, setResults] = useState(25);
     const [users, setUsers] = useState<IUser[]>([]);
     const [selectedUser, setSelectedUser] = useState({});
     const [usersLoaded, setUsersLoaded] = useState(false);
+
+    // Load more results when the user scrolls to the bottom of the UserList container
+    const handleScroll = (e: React.SyntheticEvent) => {
+        let target = e.target as HTMLDivElement;
+        let scrollTop = target.scrollTop + Number.parseFloat(getComputedStyle(target).height || "0");
+        let scrollPercent = scrollTop / target.scrollHeight;
+
+        if (scrollPercent > 0.99) {
+            setResults(results + 25);
+        }
+    }
 
     // Fetch users and trigger a state update when complete, also triggers when the pageNumber is changed
     // This function will prefer using fresh data returned from randomuser.me, but if it's unable to do this (e.g. if we're offline)
@@ -152,7 +162,7 @@ const HomePage: React.FC<{ width: string }> = ({ width }) => {
                 })
             })
         return () => abortController.abort()
-    }, [pageNumber, results, usersLoaded])
+    }, [usersLoaded])
 
     // Display a progress indicator if users are still loading, otherwise display the users as a list
     let content = null
@@ -186,8 +196,8 @@ const HomePage: React.FC<{ width: string }> = ({ width }) => {
         content = (
             <Grid container spacing={2} direction={width === "xs" ? "column" : "row"}>
                 <Grid item md={3} sm={4}>
-                    <Paper className={classes.listContainer}>
-                        <UsersList users={users} onChange={setSelectedUser} pageNumber={pageNumber} results={results} />
+                    <Paper className={classes.listContainer} onScroll={handleScroll}>
+                        <UsersList users={users} onChange={setSelectedUser} results={results} />
                     </Paper>
                 </Grid>
 

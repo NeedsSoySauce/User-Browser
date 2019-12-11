@@ -6,12 +6,11 @@ import { AppContext } from '../App';
 interface IUsersListProps {
     users: Array<IUser>, 
     onChange: (value: IUser) => any, 
-    pageNumber: number, 
     results: number
 }
 
 // Page numbers start from 1
-const UsersList: React.FC<IUsersListProps> = ({ users, onChange, pageNumber, results }) => {
+const UsersList: React.FC<IUsersListProps> = ({ users, onChange, results }) => {
     const [selectedUser, setSelectedUser] = useState({});
     const { searchbarValue, filterOptions, sortingOptions } = useContext(AppContext);
 
@@ -53,21 +52,9 @@ const UsersList: React.FC<IUsersListProps> = ({ users, onChange, pageNumber, res
         matchingUsers.reverse();
     }
 
-    let startingIndex: number;
-
-    // If the page number is less than 1 we display the first page
-    if (pageNumber < 1) { 
-        startingIndex = 0;
-    // If the page number is too large we display the last page
-    } else if (pageNumber > Math.ceil(matchingUsers.length / results)) { 
-        startingIndex = results * (Math.ceil(matchingUsers.length / results) - 1);
-    } else {
-        startingIndex = results * (pageNumber - 1);
-    }
-
     // Create list items for the matching users
     let items = [];
-    for (let i = startingIndex; i < startingIndex + results; i++) {
+    for (let i = 0; i < results; i++) {
 
         if (matchingUsers[i] === undefined) {
             break;
