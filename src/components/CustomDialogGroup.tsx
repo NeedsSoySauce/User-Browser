@@ -1,10 +1,25 @@
 import React, { useState } from 'react';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
-const CustomDialogGroup: React.FC<{ children: any, key?: any}> = ({ children, key }) => {
+interface ICustomDialogGroupProps {
+    children: any, 
+    direction?: "row" | "row-reverse" | "column" | "column-reverse"
+}
+
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        div: {
+            display: "flex"
+        }
+    })
+);
+
+const CustomDialogGroup: React.FC<ICustomDialogGroupProps> = ({ children, direction }) => {
     const [activeDialogId, setActiveDialogId] = useState(null);
+    const classes = useStyles();
 
     return (
-        <div>
+        <div className={classes.div} style={direction !== undefined ? {flexDirection: direction} : undefined}>
             {children.map((child: any, index: number) => {
                 return React.cloneElement(child, { 
                     setActiveDialogId: setActiveDialogId, 
