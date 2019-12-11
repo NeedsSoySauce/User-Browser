@@ -117,7 +117,7 @@ const SortDialog: React.FC<{ onChange?: (value: object) => any, width: string }>
                 <FormControl component="fieldset" className={classes.formControl}>
 
                     <div>
-                        <FormLabel component="legend" className={classes.formLabel}>Order by...</FormLabel>
+                        <FormLabel component="legend" className={classes.formLabel}>Ordering</FormLabel>
                         <RadioGroup
                             row
                             aria-label="ordering"

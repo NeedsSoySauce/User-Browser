@@ -117,7 +117,7 @@ const FilterDialog: React.FC<{ onChange?: (value: object) => any, width: string 
                     <CloseIcon fontSize="small" />
                 </IconButton>
 
-                <DialogTitle className={classes.dialogTitle}>Filters</DialogTitle>
+                <DialogTitle className={classes.dialogTitle}>Filter</DialogTitle>
 
                 <FormControl component="fieldset" className={classes.formControl}>
 
