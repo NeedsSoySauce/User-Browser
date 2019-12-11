@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button, Dialog, DialogTitle, FormControl, FormLabel, FormControlLabel, RadioGroup, Radio } from '@material-ui/core';
+import { Button, IconButton, Dialog, DialogTitle, FormControl, FormLabel, FormControlLabel, RadioGroup, Radio, withWidth } from '@material-ui/core';
 import SortIcon from '@material-ui/icons/Sort';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         dialogRoot: {
-            width: "33vw",
             padding: theme.spacing(2, 3)
         },
         dialogTitle: {
@@ -28,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const SortDialog: React.FC<{ onChange?: (value: object) => any }> = ({ onChange }) => {
+const SortDialog: React.FC<{ onChange?: (value: object) => any, width: string }> = ({ onChange, width }) => {
     const [open, setOpen] = useState(false);
     const [ordering, setOrdering] = useState('First name')
     const [direction, setDirection] = useState('Descending')
@@ -52,8 +51,9 @@ const SortDialog: React.FC<{ onChange?: (value: object) => any }> = ({ onChange 
         setDirection("Descending");
     }
 
-    return (
-        <div>
+    let button;
+    if (width !== "xs") {
+        button = (
             <Button
                 color="inherit"
                 startIcon={<SortIcon />}
@@ -61,6 +61,22 @@ const SortDialog: React.FC<{ onChange?: (value: object) => any }> = ({ onChange 
             >
                 Sort
             </Button>
+        )
+    } else {
+        button = (
+            <IconButton
+                size="small"
+                color="inherit"
+                onClick={e => setOpen(true)}
+            >
+                <SortIcon />
+            </IconButton>
+        )
+    }
+
+    return (
+        <div>
+            {button}
             <Dialog
                 classes={{
                     paper: classes.dialogRoot
@@ -107,7 +123,7 @@ const SortDialog: React.FC<{ onChange?: (value: object) => any }> = ({ onChange 
 
                 <div className={classes.buttonContainer}>
                     <Button color="primary" variant="outlined" onClick={resetSortingOptions}>Reset</Button>
-                    {/* <Button color="primary" variant="contained" onClick={applySortingOptions}>Apply</Button> */}
+                    <Button color="primary" variant="contained" onClick={applySortingOptions}>Apply</Button>
                 </div>
 
             </Dialog>
@@ -116,4 +132,4 @@ const SortDialog: React.FC<{ onChange?: (value: object) => any }> = ({ onChange 
     );
 }
 
-export default SortDialog;
+export default withWidth()(SortDialog);
