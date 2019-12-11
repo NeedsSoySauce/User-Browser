@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, IconButton, Dialog, DialogTitle, FormControl, FormLabel, FormControlLabel, RadioGroup, Radio, withWidth } from '@material-ui/core';
 import SortIcon from '@material-ui/icons/Sort';
+import CloseIcon from '@material-ui/icons/Close';
 import { AppContext } from '../App';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -24,6 +25,12 @@ const useStyles = makeStyles((theme: Theme) =>
             padding: theme.spacing(2, 0, 0, 0),
             display: "flex",
             justifyContent: "space-around"
+        },
+        closeButton: {
+            position: "absolute",
+            right: 0,
+            top: 0,
+            margin: theme.spacing(1)
         }
     })
 );
@@ -95,6 +102,16 @@ const SortDialog: React.FC<{ onChange?: (value: object) => any, width: string }>
                     revertChanges();
                 }}
             >
+
+                <IconButton
+                    aria-label="close"
+                    className={classes.closeButton}
+                    size="small"
+                    onClick={() => setOpen(false)}
+                >
+                    <CloseIcon fontSize="small" />
+                </IconButton>
+
                 <DialogTitle className={classes.dialogTitle}>Sort</DialogTitle>
 
                 <FormControl component="fieldset" className={classes.formControl}>
