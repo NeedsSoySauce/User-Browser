@@ -17,7 +17,10 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const SortDialog: React.FC<{ onChange?: (value: object) => any }> = ({ onChange }) => {
+const SortDialog: React.FC<{ onChange?: (value: object) => any, [x: string]: any  }> = ( props ) => {
+
+    const { onChange, ...other} = props;
+
     const [ordering, setOrdering] = useState('First name')
     const [direction, setDirection] = useState('Descending')
     const classes = useStyles();
@@ -51,6 +54,7 @@ const SortDialog: React.FC<{ onChange?: (value: object) => any }> = ({ onChange 
             onApply={applySortingOptions}
             onReset={resetSortingOptions}
             onClose={revertChanges}
+            {...other}
         >
             <FormControl component="fieldset" className={classes.formControl}>
 

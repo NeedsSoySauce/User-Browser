@@ -4,14 +4,17 @@ import CloseIcon from '@material-ui/icons/Close';
 import React, { useState } from 'react';
 
 interface ICustomDialogProps {
-    width: string, 
+    width: string,
     children?: any,
     title: string,
     buttonText: string,
     icon: JSX.Element,
     onApply?: () => any,
     onReset?: () => any,
-    onClose?: () => any
+    onClose?: () => any,
+    setActiveDialogId?: (value: number | null) => any,
+    activeDialogId?: number | null,
+    dialogId?: number
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -37,12 +40,21 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const CustomDialog: React.FC<ICustomDialogProps> = ({ width, children, title, buttonText, icon, onApply, onReset, onClose }) => {
+const CustomDialog: React.FC<ICustomDialogProps> = ({ width, children, title, buttonText, icon, onApply, onReset,
+                                                      onClose, setActiveDialogId, activeDialogId, dialogId }) => {
+
     const [open, setOpen] = useState(false);
     const classes = useStyles();
 
     const handleClose = () => {
         setOpen(false);
+    }
+
+    const handleOpen = () => {
+        setOpen(true);
+        if (setActiveDialogId !== undefined && dialogId !== undefined) {
+            setActiveDialogId(dialogId);
+        }
     }
 
     let button;
@@ -51,7 +63,7 @@ const CustomDialog: React.FC<ICustomDialogProps> = ({ width, children, title, bu
             <Button
                 color="inherit"
                 startIcon={icon}
-                onClick={e => setOpen(true)}
+                onClick={handleOpen}
             >
                 {buttonText}
             </Button>
@@ -61,7 +73,7 @@ const CustomDialog: React.FC<ICustomDialogProps> = ({ width, children, title, bu
             <IconButton
                 size="small"
                 color="inherit"
-                onClick={() => setOpen(true)}
+                onClick={handleOpen}
             >
                 {icon}
             </IconButton>
@@ -75,7 +87,7 @@ const CustomDialog: React.FC<ICustomDialogProps> = ({ width, children, title, bu
                 classes={{
                     paper: classes.dialogRoot
                 }}
-                open={open}
+                open={open && (activeDialogId !== undefined && activeDialogId === dialogId)}
                 onClose={() => {
                     handleClose();
                 }}
@@ -84,14 +96,14 @@ const CustomDialog: React.FC<ICustomDialogProps> = ({ width, children, title, bu
                     aria-label="close"
                     className={classes.closeButton}
                     size="small"
-                    onClick={() => setOpen(false)}
+                    onClick={handleClose}
                 >
                     <CloseIcon fontSize="small" />
                 </IconButton>
 
                 <DialogTitle className={classes.dialogTitle}>{title}</DialogTitle>
 
-                    {children}
+                {children}
 
                 <div className={classes.buttonContainer}>
                     <Button color="primary" variant="outlined" onClick={onReset}>Reset</Button>

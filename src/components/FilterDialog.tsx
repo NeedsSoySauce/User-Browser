@@ -19,7 +19,10 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const FilterDialog: React.FC<{ onChange?: (value: object) => any }> = ({ onChange }) => {
+const FilterDialog: React.FC<{ onChange?: (value: object) => any, [x: string]: any }> = ( props ) => {
+
+    const { onChange, ...other } = props;
+
     const [gender, setGender] = useState('all')
     const [ageRange, setAgeRange] = useState([0, 100])
     const [countries, setCountries] = useState<object[]>([]);
@@ -57,6 +60,7 @@ const FilterDialog: React.FC<{ onChange?: (value: object) => any }> = ({ onChang
             onApply={applyFilterOptions}
             onReset={resetFilterOptions}
             onClose={revertChanges}
+            {...other}
         >
             <FormControl component="fieldset" className={classes.formControl}>
 

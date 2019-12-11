@@ -8,6 +8,7 @@ import Searchbar from './components/Searchbar';
 import SortDialog from './components/SortDialog';
 import HomePage from './pages/HomePage';
 import NoMatchPage from './pages/NoMatchPage';
+import CustomDialogGrup from './components/CustomDialogGroup';
 
 interface IAppProps {
     width: string
@@ -116,8 +117,10 @@ const App: React.FC<IAppProps> = ({ width }) => {
 
                             <div className={classes.searchInputs}>
                                 <Searchbar onInput={setSearchbarValue} />
-                                <FilterDialog onChange={(value: any) => setFilterOptions(value)} />
-                                <SortDialog onChange={(value: any) => setSortingOptions(value)} />
+                                <CustomDialogGrup>
+                                    <FilterDialog onChange={(value: any) => setFilterOptions(value)} />
+                                    <SortDialog onChange={(value: any) => setSortingOptions(value)} />
+                                </CustomDialogGrup>
                             </div>
                         </Toolbar>
                     </Container>
