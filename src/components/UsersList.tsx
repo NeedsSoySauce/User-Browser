@@ -1,18 +1,27 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { List, ListItem, ListItemAvatar, ListItemText, Avatar } from '@material-ui/core';
 import { IUser } from '.././pages/HomePage';
 import { AppContext } from '../App';
 
 interface IUsersListProps {
     users: Array<IUser>, 
-    onChange?: (value: IUser) => any, 
+    onSelection?: (value: IUser) => any, 
+    onSearch?: () => any, 
     results: number
 }
 
 // Page numbers start from 1
-const UsersList: React.FC<IUsersListProps> = ({ users, onChange, results }) => {
+const UsersList: React.FC<IUsersListProps> = ({ users, onSelection, onSearch, results }) => {
     const [selectedUser, setSelectedUser] = useState({});
     const { searchbarValue, filterOptions, sortingOptions } = useContext(AppContext);
+
+    useEffect(() => {
+        if (onSearch) {
+            onSearch();
+        }
+        // Disable warning about onSearch not being included in deps as we don't want this to trigger if onSearch changes
+        // eslint-disable-next-line
+    }, [searchbarValue, filterOptions, sortingOptions])
 
     let { gender, ageRange, countries } = filterOptions;
     let countryNames: string[] = countries.map((value: any) => value.name.toLowerCase());
@@ -68,8 +77,8 @@ const UsersList: React.FC<IUsersListProps> = ({ users, onChange, results }) => {
                 selected={selectedUser === user}
                 onClick={e => {
                     setSelectedUser(user);
-                    if (onChange) {
-                        onChange(user);
+                    if (onSelection) {
+                        onSelection(user);
                     }
                 }}
             >

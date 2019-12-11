@@ -197,7 +197,7 @@ const HomePage: React.FC<{ width: string }> = ({ width }) => {
             <Grid container spacing={2} direction={width === "xs" ? "column" : "row"}>
                 <Grid item md={3} sm={4}>
                     <Paper className={classes.listContainer} onScroll={handleScroll}>
-                        <UsersList users={users} onChange={setSelectedUser} results={results} />
+                        <UsersList users={users} onSelection={setSelectedUser} onSearch={() => setResults(25)} results={results} />
                     </Paper>
                 </Grid>
 
