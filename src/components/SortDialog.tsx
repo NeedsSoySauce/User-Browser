@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, IconButton, Dialog, DialogTitle, FormControl, FormLabel, FormControlLabel, RadioGroup, Radio, withWidth } from '@material-ui/core';
 import SortIcon from '@material-ui/icons/Sort';
+import { AppContext } from '../App';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -32,6 +33,13 @@ const SortDialog: React.FC<{ onChange?: (value: object) => any, width: string }>
     const [ordering, setOrdering] = useState('First name')
     const [direction, setDirection] = useState('Descending')
     const classes = useStyles();
+    const { sortingOptions } = useContext(AppContext);
+
+    const revertChanges = () => {
+        const { ordering, direction } = sortingOptions;
+        setOrdering(ordering);
+        setDirection(direction);
+    }
 
     const handleClose = () => {
         setOpen(false);
@@ -84,7 +92,7 @@ const SortDialog: React.FC<{ onChange?: (value: object) => any, width: string }>
                 open={open}
                 onClose={e => {
                     handleClose();
-                    applySortingOptions();
+                    revertChanges();
                 }}
             >
                 <DialogTitle className={classes.dialogTitle}>Sort</DialogTitle>
