@@ -136,7 +136,7 @@ const HomePage: React.FC<{ width: string, drawerControlRef?: React.RefObject<any
 
     if (drawerControlRef !== undefined && drawerControlRef.current !== null) {
         drawerControlRef.current.onclick = () => {
-            setDrawerOpen(true);
+            setDrawerOpen(!drawerOpen);
         }
     }
 
