@@ -54,17 +54,28 @@ const theme = createMuiTheme({
 // Several of these styles are borrowed from https://material-ui.com/components/app-bar/#PrimarySearchAppBar.js
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
+        container: {
+            [theme.breakpoints.down('xs')]: {
+                padding: 0
+            },
+        },
         appBar: {
             paddingTop: 0, 
             paddingBottom: 0,
             zIndex: theme.zIndex.drawer + 1000
         },
         toolbarRoot: {
-            justifyContent: "space-between"
+            justifyContent: "space-between",
+            [theme.breakpoints.down('xs')]: {
+                padding: 0
+            },
         },
         searchInputs: {
             display: "flex",
-            alignItems: "center"
+            alignItems: "center",
+            [theme.breakpoints.down('xs')]: {
+                flexGrow: 1
+            },
         }
     })
 );
@@ -88,7 +99,7 @@ const App: React.FC<IAppProps> = ({ width }) => {
         <ThemeProvider theme={theme}>
             <AppContext.Provider value={{ searchbarValue, filterOptions, sortingOptions }}>
                 <AppBar position="relative" className={classes.appBar}>
-                    <Container>
+                    <Container className={classes.container}>
                         <Toolbar variant="dense" classes={{ root: classes.toolbarRoot }}>
 
                             {width === 'xs' ?
