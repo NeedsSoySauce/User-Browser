@@ -1,6 +1,6 @@
 import React from 'react';
-import { Paper, Typography, Divider, Grid } from '@material-ui/core';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { Paper, Typography, Divider, Grid, withWidth, useMediaQuery } from '@material-ui/core';
+import { makeStyles, createStyles, Theme, useTheme } from '@material-ui/core/styles';
 import { IUser } from '.././pages/HomePage';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -19,77 +19,89 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const UserDetails: React.FC<{ user: IUser }> = ({ user }) => {
+interface IDetailRow {
+    label: string,
+    value: string,
+    labelVariant?: "inherit" | "button" | "overline" | "caption" | "body2" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "subtitle1" | "subtitle2" | "body1" | "srOnly" | undefined,
+    valueVariant?: "inherit" | "button" | "overline" | "caption" | "body2" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "subtitle1" | "subtitle2" | "body1" | "srOnly" | undefined
+}
+
+const DetailRow: React.FC<IDetailRow> = ({ label, value, labelVariant, valueVariant }) => {
     const classes = useStyles();
+    return (
+        <Grid item>
+            <Grid container>
+                <Grid item className={classes.labelContainer}>
+                    <Typography variant={labelVariant}>{label}</Typography>
+                </Grid>
+                <Grid item>
+                    <Typography variant={valueVariant}>{value}</Typography>
+                </Grid>
+            </Grid>
+        </Grid>
+    )
+}
+
+DetailRow.defaultProps = {
+    labelVariant: "caption",
+    valueVariant: "body2"
+}
+
+const UserDetails: React.FC<{ user: IUser, width: string }> = ({ user, width }) => {
+    const classes = useStyles();
+    const theme = useTheme();
+    const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+
+    let userImage = (
+        <Grid item>
+            <Grid container justify="center">
+                <img alt={`${user.name.title} ${user.name.first} ${user.name.last}`} src={user.picture.large} style={{ borderRadius: "3px" }} />
+            </Grid>
+        </Grid>
+    )
 
     return (
         <Paper>
-            <Grid container spacing={1} justify="space-between">
+            <Grid container spacing={1} justify="space-between" direction={smDown ? "column" : "row"}>
+
+                {!smDown ? null : userImage}
+
                 <Grid item>
 
                     <Grid container direction="column" spacing={1}>
 
-                        <Grid item>
-                            <Grid container>
-                                <Grid item className={classes.labelContainer}>
-                                    <Typography variant="caption">Name</Typography>
-                                </Grid>
-                                <Grid item>
-                                    <Typography variant="h6">{`${user.name.title} ${user.name.first} ${user.name.last}`}</Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
+                        <DetailRow 
+                            label="Name" 
+                            value={`${user.name.title} ${user.name.first} ${user.name.last}`} 
+                            valueVariant="h6"
+                        />
 
-                        <Grid item>
-                            <Grid container>
-                                <Grid item className={classes.labelContainer}>
-                                    <Typography variant="caption">Gender</Typography>
-                                </Grid>
-                                <Grid item>
-                                    <Typography variant="body2">{user.gender === "male" ? "Male" : "Female"}</Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
+                        <DetailRow 
+                            label="Gender" 
+                            value={user.gender === "male" ? "Male" : "Female"}
+                        />
 
-                        <Grid item>
-                            <Grid container>
-                                <Grid item className={classes.labelContainer}>
-                                    <Typography variant="caption">Date of Birth</Typography>
-                                </Grid>
-                                <Grid item>
-                                    <Typography variant="body2">{user.dob.date}</Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
+                        <DetailRow 
+                            label="Date of Birth" 
+                            value={user.dob.date}
+                        />
 
-                        <Grid item>
-                            <Grid container>
-                                <Grid item className={classes.labelContainer}>
-                                    <Typography variant="caption">Age</Typography>
-                                </Grid>
-                                <Grid item>
-                                    <Typography variant="body2">{user.dob.age}</Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
+                        <DetailRow 
+                            label="Age" 
+                            value={user.dob.age}
+                        />
 
-                        <Grid item>
-                            <Grid container>
-                                <Grid item className={classes.labelContainer}>
-                                    <Typography variant="caption">Nationality</Typography>
-                                </Grid>
-                                <Grid item>
-                                    <Typography variant="body2">{user.nat}</Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
+                        <DetailRow 
+                            label="Nationality" 
+                            value={user.nat}
+                        />
 
                     </Grid>
 
                 </Grid>
-                <Grid item>
-                    <img alt={`${user.name.title} ${user.name.first} ${user.name.last}`} src={user.picture.large} style={{ borderRadius: "3px" }} />
-                </Grid>
+
+                {smDown ? null : userImage}
+
             </Grid>
 
             <Divider light className={classes.divider} />
@@ -99,49 +111,25 @@ const UserDetails: React.FC<{ user: IUser }> = ({ user }) => {
 
                     <Grid container direction="column" spacing={1}>
 
-                        <Grid item>
-                            <Grid container>
-                                <Grid item className={classes.labelContainer}>
-                                    <Typography variant="caption">Phone</Typography>
-                                </Grid>
-                                <Grid item>
-                                    <Typography variant="body2">{user.phone}</Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
+                        <DetailRow 
+                            label="Phone" 
+                            value={user.phone}
+                        />
 
-                        <Grid item>
-                            <Grid container>
-                                <Grid item className={classes.labelContainer}>
-                                    <Typography variant="caption">Cell</Typography>
-                                </Grid>
-                                <Grid item>
-                                    <Typography variant="body2">{user.cell}</Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
+                        <DetailRow 
+                            label="Cell" 
+                            value={user.cell}
+                        />
 
-                        <Grid item>
-                            <Grid container>
-                                <Grid item className={classes.labelContainer}>
-                                    <Typography variant="caption">Email</Typography>
-                                </Grid>
-                                <Grid item>
-                                    <Typography variant="body2">{user.email}</Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
+                        <DetailRow 
+                            label="Email" 
+                            value={user.email}
+                        />
 
-                        <Grid item>
-                            <Grid container>
-                                <Grid item className={classes.labelContainer}>
-                                    <Typography variant="caption">Username</Typography>
-                                </Grid>
-                                <Grid item>
-                                    <Typography variant="body2">{user.login.username}</Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
+                        <DetailRow 
+                            label="Username" 
+                            value={user.login.username}
+                        />
 
                     </Grid>
 
@@ -155,60 +143,30 @@ const UserDetails: React.FC<{ user: IUser }> = ({ user }) => {
 
                     <Grid container direction="column" spacing={1}>
 
-                        <Grid item>
-                            <Grid container>
-                                <Grid item className={classes.labelContainer}>
-                                    <Typography variant="caption">Country</Typography>
-                                </Grid>
-                                <Grid item>
-                                    <Typography variant="body2">{user.location.country}</Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
+                        <DetailRow 
+                            label="Country" 
+                            value={user.location.country}
+                        />
 
-                        <Grid item>
-                            <Grid container>
-                                <Grid item className={classes.labelContainer}>
-                                    <Typography variant="caption">City</Typography>
-                                </Grid>
-                                <Grid item>
-                                    <Typography variant="body2">{user.location.city}</Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
+                        <DetailRow 
+                            label="City" 
+                            value={user.location.city}
+                        />
 
-                        <Grid item>
-                            <Grid container>
-                                <Grid item className={classes.labelContainer}>
-                                    <Typography variant="caption">State</Typography>
-                                </Grid>
-                                <Grid item>
-                                    <Typography variant="body2">{user.location.state}</Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
+                        <DetailRow 
+                            label="State" 
+                            value={user.location.state}
+                        />
 
-                        <Grid item>
-                            <Grid container>
-                                <Grid item className={classes.labelContainer}>
-                                    <Typography variant="caption">Street Address</Typography>
-                                </Grid>
-                                <Grid item>
-                                    <Typography variant="body2">{`${user.location.street.number} ${user.location.street.name}`}</Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
+                        <DetailRow 
+                            label="Street Address" 
+                            value={`${user.location.street.number} ${user.location.street.name}`}
+                        />
 
-                        <Grid item>
-                            <Grid container>
-                                <Grid item className={classes.labelContainer}>
-                                    <Typography variant="caption">Postcode</Typography>
-                                </Grid>
-                                <Grid item>
-                                    <Typography variant="body2">{user.location.postcode}</Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
+                        <DetailRow 
+                            label="Postcode" 
+                            value={`${user.location.postcode}`}
+                        />
 
                     </Grid>
 
@@ -219,4 +177,4 @@ const UserDetails: React.FC<{ user: IUser }> = ({ user }) => {
     )
 }
 
-export default UserDetails;
+export default withWidth()(UserDetails);
