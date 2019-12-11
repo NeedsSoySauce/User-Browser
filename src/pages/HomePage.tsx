@@ -225,6 +225,7 @@ const HomePage: React.FC<{ width: string, drawerControlRef?: React.RefObject<any
                             paper: classes.drawerRoot
                         }}
                         ModalProps={{disableEnforceFocus: true}}
+                        swipeAreaWidth={60}
                     >
                         <div className={classes.toolbar}></div>
                         <UsersList
