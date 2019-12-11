@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { CssBaseline, Container, Grid, Paper, Typography, withWidth, CircularProgress, Button, SwipeableDrawer } from '@material-ui/core';
 import UserDetails from ".././components/UserDetails";
 import UsersList from ".././components/UsersList";
 import localforage from 'localforage';
 import ErrorIcon from '@material-ui/icons/Error';
+import { debounce } from "debounce";
 
 export interface IUser {
     cell: string,
@@ -133,23 +134,71 @@ const HomePage: React.FC<{ width: string, drawerControlRef?: React.RefObject<any
     const [selectedUser, setSelectedUser] = useState({});
     const [usersLoaded, setUsersLoaded] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const [drawerScrollTop, setDrawerScrollTop] = useState(0);
 
     if (drawerControlRef !== undefined && drawerControlRef.current !== null) {
         drawerControlRef.current.onclick = () => {
             setDrawerOpen(!drawerOpen);
+            drawer.current = document.querySelector(".MuiDrawer-paper");
+            drawer.current.scrollTo(0, drawerScrollTop);
         }
     }
 
     // Load more results when the user scrolls to the bottom of the UserList container
     const handleScroll = (e: React.SyntheticEvent) => {
-        let target = e.target as HTMLDivElement;
+        let target = (width === "xs" ? drawer.current : document.getElementById("#listContainer")) as HTMLDivElement;
+
+        // It's possible for this method to be called before the drawer has been mounted
+        // This can occer if a user changes screen widths before a debounced function call is made
+        if (target === null) {
+            return;
+        }
         let scrollTop = target.scrollTop + Number.parseFloat(getComputedStyle(target).height || "0");
         let scrollPercent = scrollTop / target.scrollHeight;
 
-        if (scrollPercent > 0.99) {
+        // Store the scroll position after the user has finished scrolling so we can restore it when
+        // the drawer is opened again
+        setDrawerScrollTop(target.scrollTop);
+
+        if (scrollPercent > 0.9) {
             setResults(results + 25);
         }
     }
+
+    // userLi
+    const drawer = useRef<any>();
+    // const userList = useRef<any>();
+    // useEffect(() => {
+    //     userList.current = (
+    //         <UsersList
+    //             users={users}
+    //             initialSelection={isEmpty(selectedUser) ? undefined : selectedUser as IUser}
+    //             onSelection={setSelectedUser}
+    //             onSearch={() => {
+    //                 setResults(25);
+    //                 if (drawer.current !== undefined) {
+    //                     drawer.current.scrollTo(0, 0)
+    //                 }
+    //             }}
+    //             results={results}
+    //         />
+    //     )
+    // }, [results, selectedUser, users]);
+
+    let userList = (
+        <UsersList
+            users={users}
+            initialSelection={isEmpty(selectedUser) ? undefined : selectedUser as IUser}
+            onSelection={setSelectedUser}
+            onSearch={() => {
+                setResults(25);
+                if (drawer.current !== undefined) {
+                    drawer.current.scrollTo(0, 0)
+                }
+            }}
+            results={results}
+        />
+    )
 
     // Fetch users and trigger a state update when complete, also triggers when the pageNumber is changed
     // This function will prefer using fresh data returned from randomuser.me, but if it's unable to do this (e.g. if we're offline)
@@ -218,23 +267,23 @@ const HomePage: React.FC<{ width: string, drawerControlRef?: React.RefObject<any
                 {width !== "xs" ? null :
                     <SwipeableDrawer
                         open={drawerOpen}
-                        onClose={() => setDrawerOpen(false)}
-                        onOpen={() => setDrawerOpen(true)}
-                        onScroll={handleScroll}
+                        onClose={() => {
+                            setDrawerOpen(false);
+                        }}
+                        onOpen={() => {
+                            setDrawerOpen(true);
+                            drawer.current = document.querySelector(".MuiDrawer-paper");
+                            drawer.current.scrollTo(0, drawerScrollTop);
+                        }}
+                        onScroll={debounce(handleScroll, 50)}
                         classes={{
                             paper: classes.drawerRoot
                         }}
-                        ModalProps={{disableEnforceFocus: true}}
+                        ModalProps={{ disableEnforceFocus: true }}
                         swipeAreaWidth={60}
                     >
                         <div className={classes.toolbar}></div>
-                        <UsersList
-                            users={users}
-                            initialSelection={isEmpty(selectedUser) ? undefined : selectedUser as IUser}
-                            onSelection={setSelectedUser}
-                            onSearch={() => setResults(25)}
-                            results={results}
-                        />
+                        {userList}
                     </SwipeableDrawer>
                 }
 
@@ -242,14 +291,8 @@ const HomePage: React.FC<{ width: string, drawerControlRef?: React.RefObject<any
 
                     {width === "xs" ? null :
                         <Grid item md={3} sm={5}>
-                            <Paper className={classes.listContainer} onScroll={handleScroll}>
-                                <UsersList
-                                    users={users}
-                                    initialSelection={isEmpty(selectedUser) ? undefined : selectedUser as IUser}
-                                    onSelection={setSelectedUser}
-                                    onSearch={() => setResults(25)}
-                                    results={results}
-                                />
+                            <Paper id="#listContainer" className={classes.listContainer} onScroll={debounce(handleScroll, 66)}>
+                                {userList}
                             </Paper>
                         </Grid>
                     }

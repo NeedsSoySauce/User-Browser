@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import { List, ListItem, ListItemAvatar, ListItemText, Avatar } from '@material-ui/core';
 import { IUser } from '.././pages/HomePage';
 import { AppContext } from '../App';
@@ -13,10 +13,17 @@ interface IUsersListProps {
 
 // Page numbers start from 1
 const UsersList: React.FC<IUsersListProps> = ({ users, onSelection, onSearch, results, initialSelection }) => {
-    const [selectedUser, setSelectedUser] = useState({});
+    const [selectedUser, setSelectedUser] = useState(initialSelection);
     const { searchbarValue, filterOptions, sortingOptions } = useContext(AppContext);
+    const firstUpdate = useRef(true);
 
     useEffect(() => {
+
+        if (firstUpdate.current) {
+            firstUpdate.current = false;
+            return;
+        }
+
         if (onSearch) {
             onSearch();
         }
@@ -75,7 +82,7 @@ const UsersList: React.FC<IUsersListProps> = ({ users, onSelection, onSearch, re
             <ListItem
                 key={user.login.uuid}
                 button
-                selected={selectedUser === user || initialSelection === user}
+                selected={selectedUser === user}
                 onClick={e => {
                     setSelectedUser(user);
                     if (onSelection) {
