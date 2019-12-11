@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, IconButton, Dialog, DialogTitle, FormControl, FormLabel, FormControlLabel, RadioGroup, Radio, Slider, TextField, withWidth } from '@material-ui/core';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import countryListAllIsoData from '../variousCountryListFormats';
+import { AppContext } from '../App';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -33,8 +34,16 @@ const FilterDialog: React.FC<{ onChange?: (value: object) => any, width: string 
     const [open, setOpen] = useState(false);
     const [gender, setGender] = useState('all')
     const [ageRange, setAgeRange] = useState([0, 100])
-    const [countries, setCountries] = useState([]);
+    const [countries, setCountries] = useState<object[]>([]);
     const classes = useStyles();
+    const { filterOptions } = useContext(AppContext);
+
+    const revertChanges = () => {
+        const { gender, ageRange, countries } = filterOptions;
+        setGender(gender);
+        setAgeRange(ageRange);
+        setCountries(countries)
+    }
 
     const handleClose = () => {
         setOpen(false);
@@ -87,9 +96,9 @@ const FilterDialog: React.FC<{ onChange?: (value: object) => any, width: string 
                     paper: classes.dialogRoot
                 }}
                 open={open}
-                onClose={e => {
+                onClose={() => {
                     handleClose();
-                    applyFilterOptions();
+                    revertChanges();
                 }}
             >
                 <DialogTitle className={classes.dialogTitle}>Filters</DialogTitle>
