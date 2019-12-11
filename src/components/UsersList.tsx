@@ -7,11 +7,12 @@ interface IUsersListProps {
     users: Array<IUser>, 
     onSelection?: (value: IUser) => any, 
     onSearch?: () => any, 
-    results: number
+    results: number,
+    initialSelection?: IUser
 }
 
 // Page numbers start from 1
-const UsersList: React.FC<IUsersListProps> = ({ users, onSelection, onSearch, results }) => {
+const UsersList: React.FC<IUsersListProps> = ({ users, onSelection, onSearch, results, initialSelection }) => {
     const [selectedUser, setSelectedUser] = useState({});
     const { searchbarValue, filterOptions, sortingOptions } = useContext(AppContext);
 
@@ -74,7 +75,7 @@ const UsersList: React.FC<IUsersListProps> = ({ users, onSelection, onSearch, re
             <ListItem
                 key={user.login.uuid}
                 button
-                selected={selectedUser === user}
+                selected={selectedUser === user || initialSelection === user}
                 onClick={e => {
                     setSelectedUser(user);
                     if (onSelection) {
@@ -94,7 +95,7 @@ const UsersList: React.FC<IUsersListProps> = ({ users, onSelection, onSearch, re
     }
 
     return (
-        <List style={{ padding: 0 }}>
+        <List style={{ padding: 0 }} >
             {items}
         </List>
     );

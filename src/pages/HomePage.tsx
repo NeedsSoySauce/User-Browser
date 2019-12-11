@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { CssBaseline, Container, Grid, Paper, Typography, withWidth, CircularProgress, Button } from '@material-ui/core';
+import { CssBaseline, Container, Grid, Paper, Typography, withWidth, CircularProgress, Button, SwipeableDrawer } from '@material-ui/core';
 import UserDetails from ".././components/UserDetails";
 import UsersList from ".././components/UsersList";
 import localforage from 'localforage';
@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme: Theme) =>
             marginTop: theme.spacing(1)
         },
         loadingContainer: {
-            height: "50vh", 
+            height: "50vh",
             textAlign: "center"
         },
         listContainer: {
@@ -105,6 +105,18 @@ const useStyles = makeStyles((theme: Theme) =>
         errorIcon: {
             height: "40px",
             width: "40px"
+        },
+        drawerRoot: {
+            width: "66vw"
+        },
+        toolbar: theme.mixins.toolbar,
+        userDetailsContainer: {
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            [theme.breakpoints.down('xs')]: {
+                height: "50vh",
+            },
         }
     }),
 );
@@ -114,12 +126,19 @@ const localUserStore = localforage.createInstance({
     name: "user-browser-users"
 })
 
-const HomePage: React.FC<{ width: string }> = ({ width }) => {
+const HomePage: React.FC<{ width: string, drawerControlRef?: React.RefObject<any> }> = ({ width, drawerControlRef }) => {
     const classes = useStyles();
     const [results, setResults] = useState(25);
     const [users, setUsers] = useState<IUser[]>([]);
     const [selectedUser, setSelectedUser] = useState({});
     const [usersLoaded, setUsersLoaded] = useState(false);
+    const [drawerOpen, setDrawerOpen] = useState(false);
+
+    if (drawerControlRef !== undefined && drawerControlRef.current !== null) {
+        drawerControlRef.current.onclick = () => {
+            setDrawerOpen(true);
+        }
+    }
 
     // Load more results when the user scrolls to the bottom of the UserList container
     const handleScroll = (e: React.SyntheticEvent) => {
@@ -170,11 +189,11 @@ const HomePage: React.FC<{ width: string }> = ({ width }) => {
         content = (
             <Grid container justify="center" alignItems="center" direction="column" spacing={2} className={classes.loadingContainer}>
                 <Grid item>
-                    { !usersLoaded ? <CircularProgress /> : <ErrorIcon className={classes.errorIcon} />}
+                    {!usersLoaded ? <CircularProgress /> : <ErrorIcon className={classes.errorIcon} />}
                 </Grid>
                 <Grid item>
                     <Typography variant="caption">
-                        { !usersLoaded ? "Fetching data..." : "Failed to fetch data and no users are available in your local database."}
+                        {!usersLoaded ? "Fetching data..." : "Failed to fetch data and no users are available in your local database."}
                     </Typography>
                 </Grid>
                 {!usersLoaded ? null : (
@@ -194,21 +213,59 @@ const HomePage: React.FC<{ width: string }> = ({ width }) => {
     } else {
         let selectedUserDetails = isEmpty(selectedUser) ? null : <UserDetails user={selectedUser as IUser} />;
         content = (
-            <Grid container spacing={2} direction={width === "xs" ? "column" : "row"}>
-                <Grid item md={3} sm={4}>
-                    <Paper className={classes.listContainer} onScroll={handleScroll}>
-                        <UsersList users={users} onSelection={setSelectedUser} onSearch={() => setResults(25)} results={results} />
-                    </Paper>
-                </Grid>
+            <React.Fragment>
 
-                <Grid xs item style={selectedUserDetails === null ? { display: "flex", justifyContent: "center", alignItems: "center" } : {}}>
-                    {selectedUserDetails !== null ? selectedUserDetails : (
-                        <Typography variant="caption" >
-                            Select a user to view detailed information
-                        </Typography>
-                    )}
+                {width !== "xs" ? null :
+                    <SwipeableDrawer
+                        open={drawerOpen}
+                        onClose={() => setDrawerOpen(false)}
+                        onOpen={() => setDrawerOpen(true)}
+                        onScroll={handleScroll}
+                        classes={{
+                            paper: classes.drawerRoot
+                        }}
+                    >
+                        <div className={classes.toolbar}></div>
+                        <UsersList
+                            users={users}
+                            initialSelection={isEmpty(selectedUser) ? undefined : selectedUser as IUser}
+                            onSelection={setSelectedUser}
+                            onSearch={() => setResults(25)}
+                            results={results}
+                        />
+                    </SwipeableDrawer>
+                }
+
+                <Grid container spacing={2} direction={width === "xs" ? "column" : "row"}>
+
+                    {width === "xs" ? null :
+                        <Grid item md={3} sm={4}>
+                            <Paper className={classes.listContainer} onScroll={handleScroll}>
+                                <UsersList
+                                    users={users}
+                                    initialSelection={isEmpty(selectedUser) ? undefined : selectedUser as IUser}
+                                    onSelection={setSelectedUser}
+                                    onSearch={() => setResults(25)}
+                                    results={results}
+                                />
+                            </Paper>
+                        </Grid>
+                    }
+
+                    <Grid
+                        item
+                        xs={width !== "xs"}
+                        className={selectedUserDetails !== null ? undefined : classes.userDetailsContainer}
+                    >
+                        {selectedUserDetails !== null ? selectedUserDetails : (
+                            <Typography variant="caption" >
+                                Select a user to view detailed information
+                            </Typography>
+                        )}
+                    </Grid>
+
                 </Grid>
-            </Grid>
+            </React.Fragment>
         )
     }
 
