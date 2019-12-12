@@ -106,7 +106,7 @@ const CustomDialog: React.FC<ICustomDialogProps> = ({ width, children, title, bu
                 {children}
 
                 <div className={classes.buttonContainer}>
-                    <Button color="primary" variant="outlined" onClick={onReset}>Reset</Button>
+                    <Button color="inherit" variant="outlined" onClick={onReset}>Reset</Button>
                     <Button color="primary" variant="contained" onClick={onApply}>Apply</Button>
                 </div>
 

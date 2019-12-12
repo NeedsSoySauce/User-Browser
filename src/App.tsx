@@ -9,6 +9,8 @@ import SortDialog from './components/SortDialog';
 import HomePage from './pages/HomePage';
 import NoMatchPage from './pages/NoMatchPage';
 import CustomDialogGrup from './components/CustomDialogGroup';
+import Brightness7Icon from '@material-ui/icons/Brightness7';
+import Brightness4Icon from '@material-ui/icons/Brightness4';
 
 interface IAppProps {
     width: string
@@ -41,7 +43,12 @@ export const AppContext = React.createContext<IAppContext>({
 
 });
 
-const theme = createMuiTheme({
+const lightTheme = createMuiTheme({
+    palette: {
+      background: {
+        default: "#FAFAFA"
+      }
+    },
     overrides: {
         MuiPaper: {
             root: {
@@ -51,6 +58,20 @@ const theme = createMuiTheme({
         },
     },
 });
+
+const darkTheme = createMuiTheme({
+    palette: {
+        type: "dark"
+      },
+      overrides: {
+          MuiPaper: {
+              root: {
+                  padding: '10px',
+                  marginBottom: '10px',
+              },
+          },
+      },
+})
 
 // Several of these styles are borrowed from https://material-ui.com/components/app-bar/#PrimarySearchAppBar.js
 const useStyles = makeStyles((theme: Theme) =>
@@ -71,7 +92,7 @@ const useStyles = makeStyles((theme: Theme) =>
                 padding: 0
             },
         },
-        searchInputs: {
+        rightContainer: {
             display: "flex",
             alignItems: "center",
             [theme.breakpoints.down('xs')]: {
@@ -82,6 +103,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const App: React.FC<IAppProps> = ({ width }) => {
+    const [theme, setTheme] = useState(lightTheme);
     const [searchbarValue, setSearchbarValue] = useState("");
     const [filterOptions, setFilterOptions] = useState({
         gender: 'all',
@@ -93,6 +115,10 @@ const App: React.FC<IAppProps> = ({ width }) => {
         direction: "Descending"
     })
     const classes = useStyles();
+
+    const toggleTheme = () => {
+        setTheme(theme === lightTheme ? darkTheme : lightTheme)
+    }
 
     let menuButtonRef = React.createRef();
 
@@ -115,12 +141,19 @@ const App: React.FC<IAppProps> = ({ width }) => {
                                 </Typography>
                             }
 
-                            <div className={classes.searchInputs}>
+                            <div className={classes.rightContainer}>
                                 <Searchbar onInput={setSearchbarValue} />
                                 <CustomDialogGrup>
                                     <FilterDialog onChange={(value: any) => setFilterOptions(value)} />
                                     <SortDialog onChange={(value: any) => setSortingOptions(value)} />
                                 </CustomDialogGrup>
+                                <IconButton
+                                    color="inherit"
+                                    size={width === "xs" ? "small" : "medium"}
+                                    onClick={toggleTheme}
+                                >
+                                    {theme === lightTheme ? <Brightness4Icon /> : <Brightness7Icon />}
+                                </IconButton>
                             </div>
                         </Toolbar>
                     </Container>
