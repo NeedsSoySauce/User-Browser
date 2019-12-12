@@ -39,7 +39,9 @@ const DetailRow: React.FC<IDetailRow> = ({ label, value, labelVariant, valueVari
         <Grid item>
             <Grid container className={classes.rowContainer}>
                 <Grid item className={classes.labelContainer}>
-                    <Typography variant={labelVariant}>{label}</Typography>
+                    <Typography variant={labelVariant} style={{
+                        fontWeight: 450
+                    }}>{label}</Typography>
                 </Grid>
                 <Grid item className={classes.valueContainer}>
                     <Typography variant={valueVariant}>{value}</Typography>
