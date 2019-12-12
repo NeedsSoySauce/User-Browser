@@ -204,8 +204,16 @@ const HomePage: React.FC<{ width: string, drawerControlRef?: React.RefObject<any
                 setUsersLoaded(true);
             })
             .catch((error) => {
-                if (error.code !== 20) { // AbortError "The user aborted a request."
-                    console.log(error)
+
+                switch (error.code) {
+                    case 20:
+                        // AbortError "The user aborted a request."
+                        break;
+                    case 503:
+                        // Too many requests (API has blocked us for a few minutes)
+                        break;
+                    default:
+                        // console.log(error);
                 }
 
                 // Fallback to using local database
