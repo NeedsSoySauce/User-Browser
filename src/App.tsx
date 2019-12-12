@@ -164,7 +164,7 @@ const App: React.FC<IAppProps> = ({ width }) => {
                 <Switch>
                     <Route 
                         path="/" 
-                        render={() => <HomePage drawerControlRefs={[menuButtonRef, searchbarRef]} />}
+                        render={() => <HomePage menuButtonControlRef={menuButtonRef} searchbarControlRef={searchbarRef} />}
                     />
                     <Route component={NoMatchPage} />
                 </Switch>

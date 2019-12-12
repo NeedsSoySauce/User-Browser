@@ -60,6 +60,12 @@ export interface IUser {
     };
 }
 
+interface IHomePageProps { 
+    width: string, 
+    menuButtonControlRef?: React.RefObject<any>, 
+    searchbarControlRef?: React.RefObject<any> 
+}
+
 async function storeUsers(users: IUser[]) {
     // Store each user using their uuid as the key (this helps to prevent us from storing duplicates of the same user)
     users.forEach(user => {
@@ -127,7 +133,7 @@ const localUserStore = localforage.createInstance({
     name: "user-browser-users"
 })
 
-const HomePage: React.FC<{ width: string, drawerControlRefs?: React.RefObject<any>[] }> = ({ width, drawerControlRefs }) => {
+const HomePage: React.FC<IHomePageProps> = ({ width, menuButtonControlRef, searchbarControlRef }) => {
     const classes = useStyles();
     const [results, setResults] = useState(25);
     const [users, setUsers] = useState<IUser[]>([]);
@@ -136,21 +142,36 @@ const HomePage: React.FC<{ width: string, drawerControlRefs?: React.RefObject<an
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [drawerScrollTop, setDrawerScrollTop] = useState(0);
 
-    if (drawerControlRefs) {
-        drawerControlRefs.forEach(drawerControlRef => {
-            if ( drawerControlRef.current !== null ) {
-                drawerControlRef.current.onclick = () => {
+    // Toggle drawer's open state when the menu button is clicked
+    if ( menuButtonControlRef && menuButtonControlRef.current !== null ) {
+        menuButtonControlRef.current.onclick = () => {
 
-                    setDrawerOpen(!drawerOpen);
-                    drawer.current = document.querySelector(".MuiDrawer-paper");
-        
-                    // If no users were able to be loaded then the drawer won't exist as it has nothing to display
-                    if (drawer.current) {
-                        drawer.current.scrollTo(0, drawerScrollTop);
-                    }
-                }
+            setDrawerOpen(!drawerOpen);
+            drawer.current = document.querySelector(".MuiDrawer-paper");
+
+            // If no users were able to be loaded then the drawer won't exist as it has nothing to display
+            if (drawer.current) {
+                drawer.current.scrollTo(0, drawerScrollTop);
             }
-        })
+        }
+    }
+
+    // Only open drawer the first time the searchbar is clicked
+    if ( searchbarControlRef && searchbarControlRef.current !== null ) {
+        searchbarControlRef.current.onclick = () => {
+
+            if (drawerOpen) {
+                return;
+            }
+
+            setDrawerOpen(true);
+            drawer.current = document.querySelector(".MuiDrawer-paper");
+
+            // If no users were able to be loaded then the drawer won't exist as it has nothing to display
+            if (drawer.current) {
+                drawer.current.scrollTo(0, drawerScrollTop);
+            }
+        }
     }
 
     // Load more results when the user scrolls to the bottom of the UserList container
