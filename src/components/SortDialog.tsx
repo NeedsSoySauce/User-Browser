@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         formControl: {
             display: "flex",
-            flexDirection: "row"
+            flexDirection: "column"
         },
         formLabel: {
             padding: theme.spacing(2, 0, 1, 0)
