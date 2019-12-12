@@ -203,7 +203,7 @@ const HomePage: React.FC<IHomePageProps> = ({ width, menuButtonControlRef, searc
             onSelection={setSelectedUser}
             onSearch={() => {
                 setResults(25);
-                if (drawer.current !== undefined) {
+                if (drawer.current !== undefined && drawer.current !== null) {
                     drawer.current.scrollTo(0, 0)
                 }
             }}
@@ -292,7 +292,9 @@ const HomePage: React.FC<IHomePageProps> = ({ width, menuButtonControlRef, searc
                         onOpen={() => {
                             setDrawerOpen(true);
                             drawer.current = document.querySelector(".MuiDrawer-paper");
-                            drawer.current.scrollTo(0, drawerScrollTop);
+                            if (drawer.current !== null) {
+                                drawer.current.scrollTo(0, drawerScrollTop);
+                            }
                         }}
                         onScroll={debounce(handleScroll, 50)}
                         classes={{
