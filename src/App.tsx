@@ -103,7 +103,8 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const App: React.FC<IAppProps> = ({ width }) => {
-    const [theme, setTheme] = useState(lightTheme);
+    const themeType = localStorage.getItem("theme") || "light";
+    const [theme, setTheme] = useState(themeType === "light" ? lightTheme : darkTheme);
     const [searchbarValue, setSearchbarValue] = useState("");
     const [filterOptions, setFilterOptions] = useState({
         gender: 'all',
@@ -118,6 +119,7 @@ const App: React.FC<IAppProps> = ({ width }) => {
 
     const toggleTheme = () => {
         setTheme(theme === lightTheme ? darkTheme : lightTheme)
+        localStorage.setItem("theme", theme === lightTheme ? "dark" : "light");
     }
 
     let menuButtonRef = React.createRef();
