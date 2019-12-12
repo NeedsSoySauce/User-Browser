@@ -140,7 +140,12 @@ const HomePage: React.FC<{ width: string, drawerControlRef?: React.RefObject<any
         drawerControlRef.current.onclick = () => {
             setDrawerOpen(!drawerOpen);
             drawer.current = document.querySelector(".MuiDrawer-paper");
-            drawer.current.scrollTo(0, drawerScrollTop);
+
+            // If no users were able to be loaded then the drawer won't exist as it has nothing to display
+            // so we need to check if our query returned null beforehand
+            if (drawer.current) {
+                drawer.current.scrollTo(0, drawerScrollTop);
+            }
         }
     }
 
@@ -165,26 +170,7 @@ const HomePage: React.FC<{ width: string, drawerControlRef?: React.RefObject<any
         }
     }
 
-    // userLi
     const drawer = useRef<any>();
-    // const userList = useRef<any>();
-    // useEffect(() => {
-    //     userList.current = (
-    //         <UsersList
-    //             users={users}
-    //             initialSelection={isEmpty(selectedUser) ? undefined : selectedUser as IUser}
-    //             onSelection={setSelectedUser}
-    //             onSearch={() => {
-    //                 setResults(25);
-    //                 if (drawer.current !== undefined) {
-    //                     drawer.current.scrollTo(0, 0)
-    //                 }
-    //             }}
-    //             results={results}
-    //         />
-    //     )
-    // }, [results, selectedUser, users]);
-
     let userList = (
         <UsersList
             users={users}
