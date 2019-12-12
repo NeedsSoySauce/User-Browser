@@ -48,6 +48,9 @@ const CustomDialog: React.FC<ICustomDialogProps> = ({ width, children, title, bu
 
     const handleClose = () => {
         setOpen(false);
+        if (onClose) {
+            onClose();
+        }
     }
 
     const handleOpen = () => {
