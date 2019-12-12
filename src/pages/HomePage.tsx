@@ -127,7 +127,7 @@ const localUserStore = localforage.createInstance({
     name: "user-browser-users"
 })
 
-const HomePage: React.FC<{ width: string, drawerControlRef?: React.RefObject<any> }> = ({ width, drawerControlRef }) => {
+const HomePage: React.FC<{ width: string, drawerControlRefs?: React.RefObject<any>[] }> = ({ width, drawerControlRefs }) => {
     const classes = useStyles();
     const [results, setResults] = useState(25);
     const [users, setUsers] = useState<IUser[]>([]);
@@ -136,16 +136,21 @@ const HomePage: React.FC<{ width: string, drawerControlRef?: React.RefObject<any
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [drawerScrollTop, setDrawerScrollTop] = useState(0);
 
-    if (drawerControlRef !== undefined && drawerControlRef.current !== null) {
-        drawerControlRef.current.onclick = () => {
-            setDrawerOpen(!drawerOpen);
-            drawer.current = document.querySelector(".MuiDrawer-paper");
+    if (drawerControlRefs) {
+        drawerControlRefs.forEach(drawerControlRef => {
+            if ( drawerControlRef.current !== null ) {
+                drawerControlRef.current.onclick = () => {
 
-            // If no users were able to be loaded then the drawer won't exist as it has nothing to display
-            if (drawer.current) {
-                drawer.current.scrollTo(0, drawerScrollTop);
+                    setDrawerOpen(!drawerOpen);
+                    drawer.current = document.querySelector(".MuiDrawer-paper");
+        
+                    // If no users were able to be loaded then the drawer won't exist as it has nothing to display
+                    if (drawer.current) {
+                        drawer.current.scrollTo(0, drawerScrollTop);
+                    }
+                }
             }
-        }
+        })
     }
 
     // Load more results when the user scrolls to the bottom of the UserList container
@@ -272,7 +277,10 @@ const HomePage: React.FC<{ width: string, drawerControlRef?: React.RefObject<any
                         classes={{
                             paper: classes.drawerRoot
                         }}
-                        ModalProps={{ disableEnforceFocus: true }}
+                        ModalProps={{ 
+                            disableEnforceFocus: true,
+                            disableAutoFocus: true
+                        }}
                         swipeAreaWidth={60}
                     >   
                         <div className={classes.toolbar}></div>

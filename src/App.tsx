@@ -1,16 +1,16 @@
 import { AppBar, Container, IconButton, Toolbar, Typography, withWidth } from '@material-ui/core';
 import { createMuiTheme, createStyles, makeStyles, Theme, ThemeProvider } from '@material-ui/core/styles';
+import Brightness4Icon from '@material-ui/icons/Brightness4';
+import Brightness7Icon from '@material-ui/icons/Brightness7';
 import MenuIcon from '@material-ui/icons/Menu';
 import React, { useState } from 'react';
 import { Link, Route, Switch } from 'react-router-dom';
+import CustomDialogGrup from './components/CustomDialogGroup';
 import FilterDialog from './components/FilterDialog';
 import Searchbar from './components/Searchbar';
 import SortDialog from './components/SortDialog';
 import HomePage from './pages/HomePage';
 import NoMatchPage from './pages/NoMatchPage';
-import CustomDialogGrup from './components/CustomDialogGroup';
-import Brightness7Icon from '@material-ui/icons/Brightness7';
-import Brightness4Icon from '@material-ui/icons/Brightness4';
 
 interface IAppProps {
     width: string
@@ -122,7 +122,8 @@ const App: React.FC<IAppProps> = ({ width }) => {
         localStorage.setItem("theme", theme === lightTheme ? "dark" : "light");
     }
 
-    let menuButtonRef = React.createRef();
+    let searchbarRef = React.createRef<any>();
+    let menuButtonRef = React.createRef<any>();
 
     return (
         <ThemeProvider theme={theme}>
@@ -144,7 +145,7 @@ const App: React.FC<IAppProps> = ({ width }) => {
                             }
 
                             <div className={classes.rightContainer}>
-                                <Searchbar onInput={setSearchbarValue} />
+                                <Searchbar onInput={setSearchbarValue} ref={searchbarRef}/>
                                 <CustomDialogGrup>
                                     <FilterDialog onChange={(value: any) => setFilterOptions(value)} />
                                     <SortDialog onChange={(value: any) => setSortingOptions(value)} />
@@ -163,7 +164,7 @@ const App: React.FC<IAppProps> = ({ width }) => {
                 <Switch>
                     <Route 
                         path="/" 
-                        render={() => <HomePage drawerControlRef={menuButtonRef} />}
+                        render={() => <HomePage drawerControlRefs={[menuButtonRef, searchbarRef]} />}
                     />
                     <Route component={NoMatchPage} />
                 </Switch>

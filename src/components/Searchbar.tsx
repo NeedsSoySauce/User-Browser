@@ -44,10 +44,10 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const Searchbar: React.FC<{ onInput?: (value: string) => any }> = ({ onInput }) => {
+const Searchbar: React.FC<{ [x: string]: any }> = React.forwardRef<any, any>( ({ onInput }, ref) => {
     const classes = useStyles();
     const [inputValue, setInputValue] = useState('');
-
+    
     return (
         <div className={classes.search}>
             <div className={classes.searchIcon}>
@@ -59,6 +59,7 @@ const Searchbar: React.FC<{ onInput?: (value: string) => any }> = ({ onInput }) 
                     root: classes.inputRoot,
                     input: classes.inputInput
                 }}
+                inputRef={ref}
                 value={inputValue}
                 onInput={e => {
                     let value = (e.target as HTMLInputElement).value;
@@ -70,6 +71,6 @@ const Searchbar: React.FC<{ onInput?: (value: string) => any }> = ({ onInput }) 
             />
         </div>
     );
-}
+})
 
 export default Searchbar;
