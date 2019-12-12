@@ -274,9 +274,11 @@ const HomePage: React.FC<{ width: string, drawerControlRef?: React.RefObject<any
                         }}
                         ModalProps={{ disableEnforceFocus: true }}
                         swipeAreaWidth={60}
-                    >
+                    >   
                         <div className={classes.toolbar}></div>
-                        {userList}
+                        <div onClick={() => setDrawerOpen(false)}>
+                            {userList}
+                        </div>
                     </SwipeableDrawer>
                 }
 
