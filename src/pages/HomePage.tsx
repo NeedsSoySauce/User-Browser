@@ -140,7 +140,11 @@ const HomePage: React.FC<{ width: string, drawerControlRef?: React.RefObject<any
         drawerControlRef.current.onclick = () => {
             setDrawerOpen(!drawerOpen);
             drawer.current = document.querySelector(".MuiDrawer-paper");
-            drawer.current.scrollTo(0, drawerScrollTop);
+
+            // If no users were able to be loaded then the drawer won't exist as it has nothing to display
+            if (drawer.current) {
+                drawer.current.scrollTo(0, drawerScrollTop);
+            }
         }
     }
 
