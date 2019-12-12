@@ -1,4 +1,4 @@
-import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Slider, TextField } from '@material-ui/core';
+import { FormGroup, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Slider, TextField } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -9,6 +9,10 @@ import CustomDialog from "./CustomDialog";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
+        formGroup: {
+            display: "flex",
+            flexDirection: "column"
+        },
         formControl: {
             display: "flex",
             flexDirection: "column"
@@ -19,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const FilterDialog: React.FC<{ onChange?: (value: object) => any, [x: string]: any }> = ( props ) => {
+const FilterDialog: React.FC<{ onChange?: (value: object) => any, [x: string]: any }> = (props) => {
 
     const { onChange, ...other } = props;
 
@@ -62,9 +66,9 @@ const FilterDialog: React.FC<{ onChange?: (value: object) => any, [x: string]: a
             onClose={revertChanges}
             {...other}
         >
-            <FormControl component="fieldset" className={classes.formControl}>
+            <FormGroup className={classes.formGroup}>
 
-                <div>
+                <FormControl component="fieldset" className={classes.formControl}>
                     <FormLabel component="legend" className={classes.formLabel}>Gender</FormLabel>
                     <RadioGroup
                         row
@@ -72,13 +76,13 @@ const FilterDialog: React.FC<{ onChange?: (value: object) => any, [x: string]: a
                         name="gender"
                         value={gender}
                         onChange={e => setGender(e.target.value)}>
-                        <FormControlLabel value="all" control={<Radio color="primary"/>} label="All" />
-                        <FormControlLabel value="male" control={<Radio color="primary"/>} label="Male" />
-                        <FormControlLabel value="female" control={<Radio color="primary"/>} label="Female" />
+                        <FormControlLabel value="all" control={<Radio color="primary" />} label="All" />
+                        <FormControlLabel value="male" control={<Radio color="primary" />} label="Male" />
+                        <FormControlLabel value="female" control={<Radio color="primary" />} label="Female" />
                     </RadioGroup>
-                </div>
-
-                <div>
+                </FormControl>
+                
+                <FormControl component="fieldset" className={classes.formControl}>
                     <FormLabel component="legend" className={classes.formLabel}>Age</FormLabel>
                     <Slider
                         value={ageRange}
@@ -87,9 +91,9 @@ const FilterDialog: React.FC<{ onChange?: (value: object) => any, [x: string]: a
                         aria-labelledby="range-slider"
                         getAriaValueText={value => `${value}`}
                     />
-                </div>
+                </FormControl>
 
-                <div>
+                <FormControl component="fieldset" className={classes.formControl}>
                     <FormLabel component="legend" className={classes.formLabel}>Country</FormLabel>
                     <Autocomplete
                         multiple
@@ -112,9 +116,10 @@ const FilterDialog: React.FC<{ onChange?: (value: object) => any, [x: string]: a
                             />
                         )}
                     />
-                </div>
-            </FormControl>
-        </CustomDialog>
+                </FormControl>
+            </FormGroup>
+
+        </CustomDialog >
     )
 }
 

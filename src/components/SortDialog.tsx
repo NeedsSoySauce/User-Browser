@@ -1,4 +1,4 @@
-import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@material-ui/core';
+import { FormGroup, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import SortIcon from '@material-ui/icons/Sort';
 import React, { useContext, useState } from 'react';
@@ -7,6 +7,10 @@ import CustomDialog from "./CustomDialog";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
+        formGroup: {
+            display: "flex",
+            flexDirection: "column"
+        },
         formControl: {
             display: "flex",
             flexDirection: "column"
@@ -17,9 +21,9 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const SortDialog: React.FC<{ onChange?: (value: object) => any, [x: string]: any  }> = ( props ) => {
+const SortDialog: React.FC<{ onChange?: (value: object) => any, [x: string]: any }> = (props) => {
 
-    const { onChange, ...other} = props;
+    const { onChange, ...other } = props;
 
     const [ordering, setOrdering] = useState('First name')
     const [direction, setDirection] = useState('Descending')
@@ -31,7 +35,7 @@ const SortDialog: React.FC<{ onChange?: (value: object) => any, [x: string]: any
         setOrdering(ordering);
         setDirection(direction);
     }
-    
+
     const applySortingOptions = () => {
         if (onChange !== undefined) {
             onChange({
@@ -56,37 +60,43 @@ const SortDialog: React.FC<{ onChange?: (value: object) => any, [x: string]: any
             onClose={revertChanges}
             {...other}
         >
-            <FormControl component="fieldset" className={classes.formControl}>
 
-                <div>
-                    <FormLabel component="legend" className={classes.formLabel}>Ordering</FormLabel>
-                    <RadioGroup
-                        row
-                        aria-label="ordering"
-                        name="ordering"
-                        value={ordering}
-                        onChange={e => setOrdering(e.target.value)}>
-                        <FormControlLabel value="First name" control={<Radio color="primary" />} label="First name" />
-                        <FormControlLabel value="Last name" control={<Radio color="primary" />} label="Last name" />
-                        <FormControlLabel value="Age" control={<Radio color="primary" />} label="Age" />
-                        <FormControlLabel value="Country" control={<Radio color="primary" />} label="Country" />
-                    </RadioGroup>
-                </div>
+            <FormGroup className={classes.formGroup}>
+                <FormControl component="fieldset" className={classes.formControl}>
 
-                <div>
-                    <FormLabel component="legend" className={classes.formLabel}>Direction</FormLabel>
-                    <RadioGroup
-                        row
-                        aria-label="direction"
-                        name="direction"
-                        value={direction}
-                        onChange={e => setDirection(e.target.value)}>
-                        <FormControlLabel value="Ascending" control={<Radio color="primary" />} label="Ascending" />
-                        <FormControlLabel value="Descending" control={<Radio color="primary" />} label="Descending" />
-                    </RadioGroup>
-                </div>
+                    <div>
+                        <FormLabel component="legend" className={classes.formLabel}>Ordering</FormLabel>
+                        <RadioGroup
+                            row
+                            aria-label="ordering"
+                            name="ordering"
+                            value={ordering}
+                            onChange={e => setOrdering(e.target.value)}>
+                            <FormControlLabel value="First name" control={<Radio color="primary" />} label="First name" />
+                            <FormControlLabel value="Last name" control={<Radio color="primary" />} label="Last name" />
+                            <FormControlLabel value="Age" control={<Radio color="primary" />} label="Age" />
+                            <FormControlLabel value="Country" control={<Radio color="primary" />} label="Country" />
+                        </RadioGroup>
+                    </div>
+                </FormControl>
 
-            </FormControl>
+                <FormControl component="fieldset" className={classes.formControl}>
+                    <div>
+                        <FormLabel component="legend" className={classes.formLabel}>Direction</FormLabel>
+                        <RadioGroup
+                            row
+                            aria-label="direction"
+                            name="direction"
+                            value={direction}
+                            onChange={e => setDirection(e.target.value)}>
+                            <FormControlLabel value="Ascending" control={<Radio color="primary" />} label="Ascending" />
+                            <FormControlLabel value="Descending" control={<Radio color="primary" />} label="Descending" />
+                        </RadioGroup>
+                    </div>
+
+                </FormControl>
+            </FormGroup>
+
         </CustomDialog>
     )
 }
